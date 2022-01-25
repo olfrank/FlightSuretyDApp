@@ -98,12 +98,21 @@ contract('Flight Surety Tests', async (accounts) => {
     catch(e) {
 
     }
-    let result = await flightSuretyData.isAirline.call(newAirline); 
+    let result = await flightSuretyData.isRegisteredAirline.call(newAirline); 
 
     // ASSERT
     assert.equal(result, false, "Airline should not be able to register another airline if it hasn't provided funding");
 
   });
+
+  // register a new airline before the > 4 condition 
+
+  // register and fund an airline after > 4 previous airlines
+  
+ 
+
+
+
  
 
 });

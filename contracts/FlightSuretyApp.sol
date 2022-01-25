@@ -1,17 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// It's important to avoid vulnerabilities due to numeric overflow bugs
-// OpenZeppelin's SafeMath library, when used correctly, protects agains such bugs
-// More info: https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2018/november/smart-contract-insecurity-bad-arithmetic/
-
 //import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /************************************************** */
 /* FlightSurety Smart Contract                      */
 /************************************************** */
 contract FlightSuretyApp {
-    //using SafeMath for uint256; // Allow SafeMath functions to be called for all uint256 types (similar to "prototype" in Javascript)
+    
 
     /********************************************************************************************/
     /*                                       DATA VARIABLES                                     */
@@ -19,7 +15,7 @@ contract FlightSuretyApp {
 
     IFlightSuretyData flightSuretyData;
 
-    // Flight status codees
+    // Flight status codes
     uint8 private constant STATUS_CODE_UNKNOWN = 0;
     uint8 private constant STATUS_CODE_ON_TIME = 10;
     uint8 private constant STATUS_CODE_LATE_AIRLINE = 20; //this is the only code/reason to warrant an insurance payout to passengers
@@ -27,22 +23,28 @@ contract FlightSuretyApp {
     uint8 private constant STATUS_CODE_LATE_TECHNICAL = 40;
     uint8 private constant STATUS_CODE_LATE_OTHER = 50;
 
-    uint256 private constant AIRLINE_REG_FEE = 5 ether;
-    uint256 private constant AIRLINE_RENOUNCE_FEE = 1 ether;
+    bool private operational = true;  // if false, blocks all state change functions
 
-    bool private operational = true; //init status value of contract as its deployed. 
-
-    address private contractOwner;          // Account used to deploy contract
+    address private contractOwner;  
 
     uint256 private limit;
 
     
-    
+    /********************************************************************************************/
+    /*                                       CONSTRUCTOR                                        */
+    /********************************************************************************************/
 
-
-    constructor() {
+    constructor(address dataContract) {
         contractOwner = msg.sender;
+        flightSuretyData = IFlightSuretyData(dataContract);
     }
+
+    /********************************************************************************************/
+    /*                                       EVENTS                                             */
+    /********************************************************************************************/
+
+    event OperationalStatusChanged(bool mode);
+
 
 
     /********************************************************************************************/
@@ -63,13 +65,13 @@ contract FlightSuretyApp {
     }
 
     modifier onlyRegisteredAirlines(){
-        (bool isRegistered, ) = flightSuretyData.getAirlineDetails(msg.sender);
+        (bool isRegistered,, ) = flightSuretyData.getAirlineDetails(msg.sender);
         require(isRegistered, "you must be a registered airline to enter this function");
         _;
     }
 
     modifier onlyNonRegisteredAirlines(){
-        (bool isRegistered, ) = flightSuretyData.getAirlineDetails(msg.sender);
+        (bool isRegistered,, ) = flightSuretyData.getAirlineDetails(msg.sender);
         require(!isRegistered, "you must be a non-registered airline to enter this function");
         _;
     }
@@ -83,12 +85,28 @@ contract FlightSuretyApp {
     /*                                       UTILITY FUNCTIONS                                  */
     /********************************************************************************************/
 
+    function kill() public payable onlyOwner() {
+        if (msg.sender == contractOwner) {
+            selfdestruct(payable(contractOwner));
+        }
+    }
+
     function getIsOperational() public view returns(bool) {
         return operational; 
     }
 
+    function setOperatingStatus(bool mode) external onlyOwner {
+        operational = mode;
+        emit OperationalStatusChanged(mode);
+    }
 
+    function calculateLimit(uint256 numOfAdd) internal returns(uint256){
+        uint _limit = numOfAdd * 50 / 100;
+        limit = _limit;
+        return limit;
+    }
 
+   
 
 
 
@@ -97,11 +115,8 @@ contract FlightSuretyApp {
     /********************************************************************************************/
 
   
-   /**
-    * @dev Add an airline to the registration queue
-    *
-    */   
-    function registerAirline(string memory airlineName, address airlineAdd) external onlyNonRegisteredAirlines returns(bool success, uint256 votes){
+   
+    function registerAirline(string memory airlineName, address airlineAdd) external isOperational onlyNonRegisteredAirlines returns(bool success, uint256 votes){
         
         uint256 airlinesLength = flightSuretyData.getRegisteredAirlines().length;
 
@@ -112,7 +127,7 @@ contract FlightSuretyApp {
                 success = true;
                 votes = _approvals;
                 flightSuretyData.registerAirline(airlineName, airlineAdd);
-                //
+                
 
             }else{
                 success = false;
@@ -128,67 +143,36 @@ contract FlightSuretyApp {
         return (success, votes);
     }
 
-    function fundAirline() external payable isOperational onlyRegisteredAirlines {
-        require(msg.sender.balance >= msg.value, "Not enough ether to fund");
-        require(msg.value >= AIRLINE_REG_FEE, "Insufficient amount, The registration fee is 5 ether");
-        payable(address(flightSuretyData)).transfer(msg.value);
-        uint256 fundedAmount = flightSuretyData.fundAirline(msg.sender, msg.value);
-    }
 
-    function calculateLimit(uint256 numOfAdd) internal returns(uint256){
-        uint _limit = numOfAdd * 50 / 100;
-        limit = _limit;
-        return limit;
-    }
-
-
-
-    function approveAirline(address airline) external onlyRegisteredAirlines{
-        bool has = flightSuretyData.hasApprovedFlight(msg.sender, airline);
+    function approveAirline(address airline) external isOperational onlyRegisteredAirlines{
+        bool has = flightSuretyData.hasApprovedAirline(msg.sender, airline);
         require(!has, "you have already approved");
 
         flightSuretyData.approveAirline(msg.sender, airline);
     }
 
 
-    function renounceAirline() external payable onlyRegisteredAirlines returns(bool success){
-        // an airline can renounce themselves but must pay an exit fee of 1 ether.
-        require(msg.value >= AIRLINE_RENOUNCE_FEE, "Insufficient value, must be >= 1 ether");
-        // will remove the airline from the registeredAirlines[]
-        
-        success = flightSuretyData.renounceAirline(msg.sender);
-        require(success, "Your airline registration could not be renounced");
-
-        payable(address(flightSuretyData)).transfer(msg.value);
-    }
-
-
-
-   /**
-    * @dev Register a future flight for insuring.
-    *
-    */  
-    function registerFlight(string calldata flightNumber, uint256 timestamp) external onlyRegisteredAirlines{
+    function registerFlight(string calldata flightNumber, uint256 timestamp) external isOperational onlyRegisteredAirlines{
         timestamp = block.timestamp;
         bytes32 key = getFlightKey(msg.sender, flightNumber, timestamp);
 
         flightSuretyData.registerFlight(key, flightNumber, timestamp, msg.sender);
     }
 
+   
+    function processFlightStatus(address airline, string memory flightNumber, uint256 timestamp, uint8 statusCode) internal {
+        bytes32 key = getFlightKey(airline, flightNumber, timestamp);
+        ( , , ,uint8 code, ) = flightSuretyData.getFlightDetails(key);
 
-    
-   /**
-    * @dev Called after oracle has updated flight status
-    *
-    */  
-    function processFlightStatus(address airline, string memory flightNumber, uint256 timestamp, uint8 statusCode) internal pure{
-        getFlightKey(airline, flightNumber, timestamp);
-        flightSuretyData.processFlightStatus(key, airline, flightNumber, timestamp, statusCode);
-
+        if(code == 20){
+            flightSuretyData.creditInsurees(key);
+        }else{
+            flightSuretyData.updateFlightStatus(key, statusCode);
+        }
     }
 
     function fetchFlightStatus(bytes32 key) external {
-        (string memory flightNumber, address airline, uint256 timestamp) = flightSuretyData.getFlightDetails(key);
+        (string memory flightNumber, address airline, uint256 timestamp,,) = flightSuretyData.getFlightDetails(key);
         _fetchFlightStatus(flightNumber, airline, timestamp);
     }
 
@@ -214,22 +198,9 @@ contract FlightSuretyApp {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ********************** region: ORACLE MANAGEMENT **********************
+    /********************************************************************************************/
+    /*                                 region: ORACLE MANAGEMENT                                */
+    /********************************************************************************************/
 
 
     // Incremented to add pseudo-randomness at various points
@@ -373,28 +344,48 @@ contract FlightSuretyApp {
 
 
 interface IFlightSuretyData {
-    function fundAirline(address airline, uint amount) external returns(uint256 amountFunded);
 
     function registerAirline(string memory airlineName, address airlineToAdd) external ;
-
-    function buyInsurance() external;
 
     function getRegisteredAirlines() external view returns(address[] memory airlines);
 
     function getApprovals(address airlineAdd) external view returns(uint256 numOfApprovals);
 
-    function hasApprovedFlight(address approver, address airlineAdd) external view returns(bool);
+    function hasApprovedAirline(address approver, address airlineAdd) external view returns(bool);
 
     function approveAirline(address approver, address airlineAdd) external;
 
-    function getAirlineDetails(address airlineAdd) external view returns(bool isRegistered, uint256 fundedAmount);
-
-    function renounceAirline(address airlineAdd) external  returns(bool success);
+    function getAirlineDetails(address airlineAdd) external view returns(bool isRegistered, uint256 fundedAmount, string memory name);
 
     function registerFlight(bytes32 key, string memory flightNumber, uint256 timestamp, address airline) external;
 
-    function getFlightDetails(bytes32 key) external returns(string memory flightNumber, address airline, uint256 timestamp);
+    function getFlightDetails(bytes32 key) external returns(string memory flightNumber, address airline, uint256 timestamp, uint8 statusCode, bool isRegistered);
 
-    function processFlightStatus( bytes32 key, address airline, string memory flightNumber, uint256 timestamp, uint8 statusCode) external;
+    function updateFlightStatus(bytes32 key, uint8 statusCode)external;
+
+    function creditInsurees(bytes32 key) external;
+
+    
 
 }
+
+
+
+
+ // function fundAirline() external payable isOperational onlyRegisteredAirlines {
+    //     require(msg.sender.balance >= msg.value, "Not enough ether to fund");
+    //     require(msg.value >= AIRLINE_REG_FEE, "Insufficient amount, The registration fee is 5 ether");
+    //     payable(address(flightSuretyData)).transfer(msg.value);
+    //     flightSuretyData.fundAirline(msg.sender, msg.value);
+    // }
+
+// function renounceAirline() external payable onlyRegisteredAirlines returns(bool success){
+    //     // an airline can renounce themselves but must pay an exit fee of 1 ether.
+    //     require(msg.value >= AIRLINE_RENOUNCE_FEE, "Insufficient value, must be >= 1 ether");
+    //     // will remove the airline from the registeredAirlines[]
+        
+    //     success = flightSuretyData.renounceAirline(msg.sender);
+    //     require(success, "Your airline registration could not be renounced");
+
+    //     payable(address(flightSuretyData)).transfer(msg.value);
+    // }

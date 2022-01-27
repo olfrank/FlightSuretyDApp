@@ -92,8 +92,7 @@ contract FlightSuretyData {
     constructor(address airlineAdd, string memory airlineName) {
         contractOwner = msg.sender;
         airlines[airlineAdd] = Airline(airlineName, false, 0); 
-
-        _registerAirline(airlineAdd, airlineName);
+        
     }
 
 
@@ -161,11 +160,11 @@ contract FlightSuretyData {
         emit CallerDeauthorised(contractAdd);
     }
 
-    function isAuthorisedCaller(address contractAdd) external view returns(bool){
+    function isAuthorisedCaller(address contractAdd) external view requireIsOperational returns(bool){
         return authorisedCallers[contractAdd];
     }
 
-    function isRegisteredAirline(address airlineAdd) external view returns(bool){
+    function isRegisteredAirline(address airlineAdd) external view requireIsOperational returns(bool){
         return airlines[airlineAdd].isRegistered;
     }
 
@@ -199,18 +198,24 @@ contract FlightSuretyData {
 
     function _registerAirline(address _airlineAdd, string memory _name) internal { // 1 of 2 step registration process (initialise)
         airlines[_airlineAdd] = Airline(_name, false, 0); // initialise the struct
-        registeredAirlines.push(_airlineAdd);
     }
 
 
     function fundAirline() external payable requireIsOperational { // 2 of 2 step registration process (registered)
+        string memory airlineName = airlines[msg.sender].name;
+        bytes memory _airlineName = bytes(airlineName);
+
+        require(_airlineName.length != 0, "You must request to be registered first");
         require(msg.sender.balance >= msg.value, "Not enough ether to fund");
         require(msg.value >= AIRLINE_REG_FEE, "Insufficient amount, The registration fee is 5 ether");
-        uint256 amount = msg.value;
 
+        uint256 amount = msg.value;
         string memory name = airlines[msg.sender].name;
+
         airlines[msg.sender].fundedAmount += amount;
-        airlines[msg.sender].isRegistered = true; // completed registration
+        airlines[msg.sender].isRegistered = true; 
+
+        registeredAirlines.push(msg.sender); // completed registration
 
         emit AirlineRegistered(msg.sender, name, amount);
     }

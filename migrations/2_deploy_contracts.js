@@ -2,10 +2,11 @@ const FlightSuretyApp = artifacts.require("FlightSuretyApp");
 const FlightSuretyData = artifacts.require("FlightSuretyData");
 const fs = require('fs');
 
-module.exports = function(deployer) {
+module.exports = function(deployer, accounts) {
 
-    let firstAirline = '0xf17f52151EbEF6C7334FAD080c5704D77216b732';
-    deployer.deploy(FlightSuretyData)
+    let firstAirlineAdd = accounts[9];
+    let firstAirlineName = "Qatar Airways";
+    deployer.deploy(FlightSuretyData, firstAirlineAdd, firstAirlineName)
     .then(() => {
         return deployer.deploy(FlightSuretyApp)
                 .then(() => {

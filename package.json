@@ -8,14 +8,12 @@
   "directories": {
     "test": "test"
   },
-  
   "scripts": {
     "test": "truffle test ./test/flightSurety.js",
     "dapp": "webpack-dev-server --mode development --config webpack.config.dapp.js",
     "dapp:prod": "webpack --mode production  --config webpack.config.dapp.js",
     "server": "rm -rf ./build/server && webpack --config webpack.config.server.js"
   },
-
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.10",
@@ -34,12 +32,12 @@
     "webpack-dev-server": "^4.7.3",
     "webpack-node-externals": "^3.0.0"
   },
-
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@openzeppelin/contracts": "^4.4.2",
     "@truffle/hdwallet-provider": "^2.0.1",
     "express": "^4.17.2",
+    "truffle-assertions": "^0.9.2",
     "web3": "^1.7.0"
   }
 }

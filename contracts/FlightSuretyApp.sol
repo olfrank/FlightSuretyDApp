@@ -132,7 +132,7 @@ contract FlightSuretyApp {
             }else{
                 success = false;
                 votes = _approvals;
-                revert("not enough approvals to register flight");
+                revert("Not enough approvals to register flight");
             }
 
         }else{
@@ -146,13 +146,13 @@ contract FlightSuretyApp {
 
     function approveAirline(address airline) external isOperational onlyRegisteredAirlines{
         bool has = flightSuretyData.hasApprovedAirline(msg.sender, airline);
-        require(!has, "you have already approved");
+        require(!has, "You have already approved this airline");
 
         flightSuretyData.approveAirline(msg.sender, airline);
     }
 
 
-    function registerFlight(string calldata flightNumber, uint256 timestamp) external isOperational onlyRegisteredAirlines{
+    function registerFlight(string memory flightNumber, uint256 timestamp) external isOperational onlyRegisteredAirlines{
         timestamp = block.timestamp;
         bytes32 key = getFlightKey(msg.sender, flightNumber, timestamp);
 

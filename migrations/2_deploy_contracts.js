@@ -4,11 +4,12 @@ const fs = require('fs');
 
 module.exports = function(deployer, accounts) {
 
-    let firstAirlineAdd = accounts[9];
+    
+    let firstAirlineAdd = "0x445aa111744c93f5a583c355704846b6cae8a3f9";
     let firstAirlineName = "Qatar Airways";
     deployer.deploy(FlightSuretyData, firstAirlineAdd, firstAirlineName)
     .then(() => {
-        return deployer.deploy(FlightSuretyApp)
+        return deployer.deploy(FlightSuretyApp, FlightSuretyData.address)
                 .then(() => {
                     let config = {
                         localhost: {
@@ -22,3 +23,5 @@ module.exports = function(deployer, accounts) {
                 });
     });
 }
+
+// 'http://localhost:8545'

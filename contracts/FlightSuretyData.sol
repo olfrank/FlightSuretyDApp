@@ -7,8 +7,8 @@ contract FlightSuretyData {
     /********************************************************************************************/
     /*                                       DATA VARIABLES                                     */
     /********************************************************************************************/
-    uint256 private constant AIRLINE_REG_FEE = 5 ether;
-    uint256 private constant AIRLINE_RENOUNCE_FEE = 1 ether;
+    uint256 public constant AIRLINE_REG_FEE = 5 ether;
+    uint256 public constant AIRLINE_RENOUNCE_FEE = 1 ether;
     address private contractOwner;  
     bool private operational = true;  // if false, blocks all state change functions
 
@@ -186,17 +186,17 @@ contract FlightSuretyData {
     }
    
 
-    function registerAirline(address airlineAdd, string memory airlineName) 
+    function registerAirline(string memory airlineName, address airlineAdd) 
                             external 
                             requireIsOperational 
                             onlyNonRegisteredAirlines 
                             onlyAuthorisedCallers { 
 
-        _registerAirline(airlineAdd, airlineName);
+        _registerAirline(airlineName, airlineAdd);
     }
 
 
-    function _registerAirline(address _airlineAdd, string memory _name) internal { // 1 of 2 step registration process (initialise)
+    function _registerAirline(string memory _name, address _airlineAdd) internal { // 1 of 2 step registration process (initialise)
         airlines[_airlineAdd] = Airline(_name, false, 0); // initialise the struct
     }
 
@@ -224,6 +224,7 @@ contract FlightSuretyData {
     function renounceAirline() external payable requireIsOperational onlyRegisteredAirlines returns(bool success){
         // an airline can renounce themselves but must pay an exit fee of 1 ether.
         require(msg.value >= AIRLINE_RENOUNCE_FEE, "Insufficient value, must be >= 1 ether");
+        
         // will remove the airline from the registeredAirlines[]
         
         success = _removeAirline(msg.sender);
@@ -244,15 +245,19 @@ contract FlightSuretyData {
 
         uint256 indexToRemove;
         uint256 lastIndex = registeredAirlines.length -1;
+        
 
         for(uint i = 0; i < registeredAirlines.length; i++){
-            if(registeredAirlines[i] == airlineAdd){
-                //address toRemove = registeredAirlines[i];
-                indexToRemove = i;
+            require(airlineAdd == registeredAirlines[i], "airline address not found in registeredAirlines[]");
+            indexToRemove = i;
+            // if(airlineAdd == registeredAirlines[i]){
+            //     //address toRemove = registeredAirlines[i];
+                
 
-            }else{
-                revert("airline not found in registeredAirlines array");
-            }
+            // }else{
+
+            //     revert("airline address not found in registeredAirlines[]");
+            // }
         }
 
         for(uint k = indexToRemove; k < lastIndex; k++){

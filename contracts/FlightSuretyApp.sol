@@ -118,11 +118,16 @@ contract FlightSuretyApp {
    
     function registerAirline(string memory airlineName, address airlineAdd) external isOperational onlyNonRegisteredAirlines returns(bool success, uint256 votes){
         
-        uint256 airlinesLength = flightSuretyData.getRegisteredAirlines().length;
+        bytes memory _airlineName = bytes(airlineName);
 
-        if(airlinesLength > 4){
+        require(_airlineName.length != 0, "must be a valid airline name");
+        require(airlineAdd != address(0), "must be a valid address");
+        
+        uint256 numOfAirlines = flightSuretyData.getRegisteredAirlines().length;
+
+        if(numOfAirlines >= 4){
             uint256 _approvals = flightSuretyData.getApprovals(airlineAdd);
-            uint256 _limit = calculateLimit(airlinesLength);
+            uint256 _limit = calculateLimit(numOfAirlines);
             if(_approvals > _limit){
                 success = true;
                 votes = _approvals;
@@ -132,7 +137,8 @@ contract FlightSuretyApp {
             }else{
                 success = false;
                 votes = _approvals;
-                revert("Not enough approvals to register flight");
+                require(success, "Not enough approvals to register flight");
+                //revert("Not enough approvals to register flight");
             }
 
         }else{

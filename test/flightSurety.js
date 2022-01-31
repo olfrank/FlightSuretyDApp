@@ -33,8 +33,8 @@ contract('Flight Surety Tests', async (accounts) => {
 
   before('setup contract', async () => {
     
-    flightSuretyApp = FlightSuretyApp.deployed();
-    flightSuretyData = FlightSuretyData.deployed();
+    flightSuretyApp = await  FlightSuretyApp.deployed();
+    flightSuretyData =  await FlightSuretyData.deployed();
     owner = accounts[0];
     firstAirline = accounts[9];
 
@@ -53,14 +53,21 @@ contract('Flight Surety Tests', async (accounts) => {
     emiratesAdd = accounts[7];
     emiratesName = "Emirates";
 
-    australianAdd = account[8];
+    australianAdd = accounts[8];
     australianName = "Australian Airlines"
 
-    fee = await flightSuretyData.AIRLINE_REG_FEE.call();
-    renounceFee = await flightSuretyData.AIRLINE_RENOUNCE_FEE.call();
+    fee = web3.utils.toWei('5', 'ether');
+    renounceFee = web3.utils.toWei('1', 'ether');
 
-    await flightSuretyData.authorizeCaller(flightSuretyApp.address, {from: owner});
+
     await flightSuretyData.fundAirline({from: firstAirline, value: fee}); //1st registered airline 
+
+    
+
+    await flightSuretyData.authoriseCaller(flightSuretyApp.address, {from: owner});
+
+    
+    
   });
 
   /****************************************************************************************/
@@ -70,7 +77,7 @@ contract('Flight Surety Tests', async (accounts) => {
   it(`(multiparty) has correct initial isOperational() value`, async function () { //****** TEST 1 ******/
 
     // Get operating status
-    let status = await flightSuretyData.isOperational.call();
+    let status = await flightSuretyData.operationalStatus.call();
     assert.equal(status, true, "Incorrect initial operating status value");
   });
 
@@ -109,7 +116,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
       await flightSuretyData.setOperatingStatus(false, {from: owner});
 
-      await truffleAssert(
+      await truffleAssert.reverts(
           flightSuretyData.isAuthorisedCaller(flightSuretyApp.address),
           "Contract is currently not operational"
           )
@@ -134,19 +141,23 @@ contract('Flight Surety Tests', async (accounts) => {
 
     assert.equal(result, false, "Airline should not be able to register if it hasn't provided funding");
 
+
   });
 
 
 
   // register a new airline before the > 4 condition 
   it("(airline) should register a new airline without the need for multi-party consent (<4)", async()=>{ //****** TEST 6 ******/
-  
+    //Funding ryanair airline from test 5
+    await flightSuretyData.fundAirline({from: ryanairAdd, value: fee}); // 2nd registered airline
+
     await flightSuretyApp.registerAirline(norwegianName, norwegianAdd, {from: norwegianAdd});
-    await flightSuretyData.fundAirline({from: norwegianAdd, value: fee});
+    await flightSuretyData.fundAirline({from: norwegianAdd, value: fee}); // 3rd registered airline
 
     let result = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
 
     assert.equal(result, true, "Airline should be added to the register airlines array post funding");
+
 
   })
 
@@ -154,22 +165,28 @@ contract('Flight Surety Tests', async (accounts) => {
 
   it("(airline) should not allow the 5th airline to register without multi-party consensus", async()=>{ //****** TEST 7 ******/
     
-    //Funding ryanair airline from test 5
-    await flightSuretyData.fundAirline({from: ryanairAdd, value: fee});
-    let res1 = await flightSuretyData.isRegisteredAirline.call(ryanairAdd);
-    assert.equal(res1, true, "Airline should be added to the register airlines array post funding");
-
+    
+    
     //register & fund VA
-    await flightSuretyApp.registerAirline(virginName, virginAdd, {from: virginAdd, value: fee});
-    await flightSuretyData.fundAirline({from: virginAdd, value: fee});
+    await flightSuretyApp.registerAirline(virginName, virginAdd, {from: virginAdd});
+    await flightSuretyData.fundAirline({from: virginAdd, value: fee}); //4th registered airline 
+
+    let res1 = await flightSuretyData.isRegisteredAirline.call(ryanairAdd);
     let res2 = await flightSuretyData.isRegisteredAirline.call(virginAdd);
-    assert.equal(res2, true, "Airline should be added to the register airlines array post funding");
+    let res3 = await flightSuretyData.getRegisteredAirlines.call({from: flightSuretyApp.address });
+    
 
     //register & fund BA - approval needed
     await truffleAssert.reverts(
-        flightSuretyApp.registerAirline(britishName, britishAdd, {from: britishAdd, value: fee}),
+        flightSuretyApp.registerAirline(britishName, britishAdd, {from: britishAdd}),
         "Not enough approvals to register flight"
-    )
+    );
+
+    assert.equal(res1, true, "Airline should be added to the register airlines array post funding");
+    assert.equal(res2, true, "Airline should be added to the register airlines array post funding");
+    assert.equal(res3.length, 4, "The airline addresses werent pushed to the array");
+    console.log(res3);
+    
   })
 
 
@@ -178,9 +195,10 @@ contract('Flight Surety Tests', async (accounts) => {
 
     await flightSuretyApp.approveAirline(emiratesAdd, {from: ryanairAdd});
     await flightSuretyApp.approveAirline(emiratesAdd, {from: virginAdd});
+    await flightSuretyApp.approveAirline(emiratesAdd, {from: firstAirline});
 
-    await flightSuretyApp.registerAirline(emiratesName, emiratesAdd, {from: emiratesAdd, value: fee});
-    await flightSuretyData.fundAirline({from: emiratesAdd, value: fee});
+    await flightSuretyApp.registerAirline(emiratesName, emiratesAdd, {from: emiratesAdd});
+    await flightSuretyData.fundAirline({from: emiratesAdd, value: fee}); // 5th registered airline
 
     let approvals = await flightSuretyData.getApprovals.call(emiratesAdd, {from: flightSuretyApp.address});
 
@@ -193,17 +211,20 @@ contract('Flight Surety Tests', async (accounts) => {
         assert.equal(name, "Emirates", "Incorrect name value");
     });
 
-    assert.equal(approvals, 2, "Incorrect number of approvals")
+    assert.equal(approvals, 3, "Incorrect number of approvals");
+    
+    
+    
   })
 
 
 
   it("(airline) should not allow the same airline to approve twice", async()=>{
 
-    await flightSuretyApp.approveAirline(australianAdd, {from: britishAdd});
+    await flightSuretyApp.approveAirline(australianAdd, {from: virginAdd});
 
     await truffleAssert.reverts(
-        await flightSuretyApp.approveAirline(australianAdd, {from: britishAdd}),
+        flightSuretyApp.approveAirline(australianAdd, {from: virginAdd}),
         "You have already approved this airline"
     );
   })
@@ -211,11 +232,15 @@ contract('Flight Surety Tests', async (accounts) => {
 
 
   it("(airline) should renounce airline and remove from the registered airlines array", async()=>{
+      let result1 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
 
-      await flightSuretyData.renounceAirline({from: ryanairAdd, value: renounceFee});
-      let result = await flightSuretyData.isRegisteredAirline.call(ryanairAdd);
-      expect.equal(result, false, "Airline should have been removed from array")
-  })
+      await flightSuretyData.renounceAirline({from: norwegianAdd, value: renounceFee});
+
+      let result2 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+
+      expect.equal(result1, true, "Should be a registered airline pre removal");
+      expect.equal(result2, false, "Airline should have been removed from array");
+  });
 
 
 

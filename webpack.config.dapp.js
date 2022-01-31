@@ -1,0 +1,59 @@
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+module.exports = {
+  entry: ['@babel/polyfill', path.join(__dirname, "src/dapp")],
+  output: {
+    path: path.join(__dirname, "prod/dapp"),
+    filename: "bundle.js"
+  },
+  module: {
+    rules: [
+    {
+        test: /\.(js|jsx)$/,
+        use: "babel-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader'
+        ]
+      },
+      {
+        test: /\.html$/,
+        use: "html-loader",
+        exclude: /node_modules/
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({ 
+      template: path.join(__dirname, "src/dapp/index.html")
+    })
+  ],
+  resolve: {
+    extensions: [".js"],
+    fallback: {
+        stream: false,
+        crypto: false,
+        assert: false,
+        https: false,
+        http: false,
+        url: false,
+        os: false
+    }
+  },
+
+  devServer: {
+    //contentBase: path.join(__dirname, "dapp"),
+    static: "/Users/OllieFrancis/Documents/UDACITYprojects/FlightSurety/src/dapp/",
+    compress: true,
+    port: 8000,
+    //stats: "minimal"
+  }
+};

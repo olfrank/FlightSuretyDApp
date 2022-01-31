@@ -233,6 +233,8 @@ contract('Flight Surety Tests', async (accounts) => {
 
   it("(airline) should renounce airline and remove from the registered airlines array", async()=>{
       let result1 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+      
+      console.log(norwegianAdd);
 
       await flightSuretyData.renounceAirline({from: norwegianAdd, value: renounceFee});
 

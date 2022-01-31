@@ -159,10 +159,11 @@ contract FlightSuretyApp {
 
 
     function registerFlight(string memory flightNumber, uint256 timestamp) external isOperational onlyRegisteredAirlines{
-        timestamp = block.timestamp;
+        
         bytes32 key = getFlightKey(msg.sender, flightNumber, timestamp);
 
         flightSuretyData.registerFlight(key, flightNumber, timestamp, msg.sender);
+        
     }
 
    

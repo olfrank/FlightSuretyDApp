@@ -6,26 +6,206 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>FlightSurety</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="umbrella.ico">
+    <link href="flightsurety.css" rel="stylesheet">
+
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="#">FlightSurety</a>
+        <a class="navbar-brand" href="#">FlightSurety</a><img class="umbrellaLogo" src="umbreallaLogoFS.png"/>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
 
-    <main class="container">
 
+
+
+
+    <main>
+
+        <ul id="cards">
+                
+            <li class="card" id="card_1">
+                <div id="firstCard" class="card__content first">
+                    <div>
+                        <h2>AIRLINE</h2>
+                        <br>
+                        <h3>Register or vote a new Airline</h3>
+                        
+                        <br>
+                        <h3>Register Airline (Step 1)</h3>
+                        <p>New airlines may send a registration request by filling out their details below (Address and Name)</p>
+                        Address Of Airline 
+                        <input type="text" id="newAirlineAdd" value="0x0000000000000000000000000000000000000000" size="50" > <br>
+                        Name Of Airline
+                        <input type="text" id="newAirlineName" value="" size="50"> <br><br>
+                        
+                        <button type="button" class="btn-registerAirline" data-id="">Register Airline</button>
+
+                        <br> <br>
+
+                        <h3>Votes Received (Step 2)</h3>
+                        <p>Here you can check the progress of your registration</p>
+                        <label>Input your airline address:</label>
+                        <input type="text" id="votes" value="" size="50" placeholder="0xd364347feb495...">
+                        <button type="button" id="btn-votes" >Check Votes</button>
+                        <input type="number" id="votesRes" disabled="true" name="votes"value="0">
+
+                        <br><br>
+
+                        <h3>Fund Airline (Step 3)</h3>
+                        <p>Once your airline has been voted in, you may fund the contract (5 ether)</p>
+                        <input type="number" id="fundAirline" value="5">ETH <br><br>
+                        <button type="button" class="btn-fundAirline" data-id="">Fund Airline</button>
+
+                        <br><br>
+
+                        <h3>Renounce Airline</h3>
+                        <p>You may also renounce your participation in Flight Surety insurance (Note: You will be charged 1 Ether).</p>
+                        <button class="btn-renounce" type="button" data-id="">Renounce your Airline</button>
+                        <br><br>
+
+                        <h3>Register Flight </h3>
+                        <p>Once you are a registered with us at Flight Surety (above steps) you may register insurable flights for your passengers</p>
+                        <label>Flight Number</label>
+                        <input type="text" id="newFlightNumber" placeholder="LT3345">
+
+                        <label>Flight Time</label>
+                        <input type="text" id="newFlightTime" placeholder="1557002554">
+
+                        
+                        
+                    </div>
+                    <figure>
+                        <img src="https://miro.medium.com/max/1112/1*1z6TdeVMs5p5rAoYRYQqpA.png" alt="Image description"
+                                style="background-color: #ffffff;"> 
+                                
+                    </figure>
+                    
+                </div>
+            </li>
+            
+            
+            <li class="card" id="card_2">
+                <div id="secondCard" class="card__content second">
+                    <div>
+                        <h2>PASSENGER</h2>
+                        <h3>Purchase Insurance</h3>
+                        <p>Select the flight you want to insure from the drop down menu and then proceed to pay</p>
+                        Select Flight:
+                        <select id="availableFlights"></select>
+                        <br><br>
+                        <label>Airline Address: </label>
+                        <input type="text" id="airlineAdd" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Flight Time: </label>
+                        <input type="text" id="flightTime" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Flight Status: </label>
+                        <input type="text" id="flightStatus" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Insurance Amount (max 1 ether) </label>
+                        <input type="number" id="flightStatus" value="" size="50"><button class = "" type="button" >Buy Insurance</button>
+                        <br><br>
+
+                        <button class = "" type="button" >Get Flights</button>
+                        <br>
+                        
+                        
+                    </div>
+                    <figure>
+                        <img src="https://i0.wp.com/blog.achievable.me/wp-content/uploads/2020/08/market-vs-limit.png?resize=1024%2C614&ssl=1" alt="Image description"
+                             style = "background-color: #cbe4f5;"> 
+                    </figure>
+                </div>
+            </li>
+            
+            
+            <li class="card" id="card_3">
+                <div id="thirdCard" class="card__content third">
+                    <div>
+                        <h2>INSURANCE PAYOUT</h2>
+                        <p>If your flight is registered and you have purchased insurance for it you are entitled for a payout.</p>
+                        Select Flight:
+                        <select id="oraclesFlights"></select>
+                        <br><br>
+                        <label>Airline Address</label>
+                        <input type="text" id="flightTimeOracles" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Flight Time</label>
+                        <input type="text" id="flightTimeOracles" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Flight Status</label>
+                        <input type="text" id="flightStatusOracles" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Amount To Withdraw</label>
+                        <input type="number" id="insuranceWithdraw" name = "itemPrice" value="0" size="50">ETH
+                        <br><br>
+                        <button class="btn-" type="button">Check Flight Status</button>
+                        <button class="btn-" type="button">Withdraw</button>
+                        
+                    </div>
+                    <figure>
+                        <img src="https://miro.medium.com/max/1440/1*PeqHouOT1H8WhXTLBv4SxA.png" alt="Image description"
+                             style = "background-color: #ffffff;">
+                    </figure>
+                </div>
+            </li>
+            
+            <li class="card" id="card_4">
+                <div id="fourthCard" class="card__content fourth">
+                    <div>
+                        <h2>CA/ADMIN</h2>
+                        <button class = "" type="button" >Get App Contract Address</button>
+                        <button class = "" type="button" >Get App Contract Status</button>
+                        <button class = "" type="button" >Set App Contract Status </button>
+                        <button class = "" type="button" >Get Data Contract Status</button>
+                        <button class = "" type="button" >Set Data Contract Status</button>
+                        <button class = "" type="button" >Authorise App Contract to Data Contract</button>
+                        
+                    </div>
+                    <figure>
+                        <img src="https://lh6.googleusercontent.com/vbIzoO24ZjCmL_PCPj1fee7458DdFPssdn7u_Pj1-lJ_XHC_XeB-Rb94ABSFbtNCOattFQ7V4CdLYDAg-yJBv4ORmkPFo-YQlfYsl_5nDIVjfJgm5uBOy_E4FvrDcVpAlVnyTEiA" alt="Image description"
+                             style = "background-color: #ffffff;">
+                    </figure>
+                
+            </li>
+            </div>
+        </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         <div id="display-wrapper" class="top-20">
         </div>
         <div class="row top-20">
             <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
         </div>
+
+
+
+
+
+
+
+        
     </main>
 
 </body>

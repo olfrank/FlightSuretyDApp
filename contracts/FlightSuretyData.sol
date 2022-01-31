@@ -226,12 +226,14 @@ contract FlightSuretyData {
         require(msg.value >= AIRLINE_RENOUNCE_FEE, "Insufficient value, must be >= 1 ether");
         
         // will remove the airline from the registeredAirlines[]
+
+        address airlineToRemove = msg.sender;
         
-        success = _removeAirline(msg.sender);
+        success = _removeAirline(airlineToRemove);
         if(success){
 
             payable(address(this)).transfer(msg.value);
-            emit AirlineRenounced(msg.sender);
+            emit AirlineRenounced(airlineToRemove);
 
         }else{
             revert("Your airline registration could not be renounced");
@@ -248,16 +250,16 @@ contract FlightSuretyData {
         
 
         for(uint i = 0; i < registeredAirlines.length; i++){
-            require(airlineAdd == registeredAirlines[i], "airline address not found in registeredAirlines[]");
-            indexToRemove = i;
-            // if(airlineAdd == registeredAirlines[i]){
-            //     //address toRemove = registeredAirlines[i];
-                
+            //require(airlineAdd == registeredAirlines[i], "airline address not found in registeredAirlines[]");
+            //indexToRemove = i;
+            if(airlineAdd == registeredAirlines[i]){
+                //address toRemove = registeredAirlines[i];
+                indexToRemove = i;
 
-            // }else{
+            }else{
 
-            //     revert("airline address not found in registeredAirlines[]");
-            // }
+                revert("airline address not found in registeredAirlines[]");
+            }
         }
 
         for(uint k = indexToRemove; k < lastIndex; k++){

@@ -15,6 +15,8 @@ import './flightsurety.css';
             console.log(error,result);
             display('Operational Status', 'Check if contract is operational', [ { label: 'Operational Status', error: error, value: result} ]);
         });
+
+        contract.get
     
 
         // User-submitted transaction
@@ -46,6 +48,8 @@ function display(title, description, results) {
     displayDiv.append(section);
 
 }
+
+function 
 
 
 

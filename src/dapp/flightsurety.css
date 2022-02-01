@@ -13,7 +13,7 @@
 }
 
 body {
-    background-image: url('athena.jpeg'); /* Source: PEXEL */
+    background-image: url('./images/athena.jpeg'); /* Source: PEXEL */
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center; 

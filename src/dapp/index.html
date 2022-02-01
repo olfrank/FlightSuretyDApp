@@ -48,15 +48,15 @@
                         Name Of Airline
                         <input type="text" id="newAirlineName" value="" size="50"> <br>
                         
-                        <button type="button" class="btn-registerAirline" data-id="">Register Airline</button>
+                        <button type="button" class="btn-registerAirline" data-id="0">Register Airline</button>
 
                         <!-- <div class="divider"></div> -->
 
                         <h3>Votes Received (Step 2)</h3>
                         <p>Here you can check the progress of your registration</p>
                         <label>Input your airline address:</label>
-                        <input type="text" id="votes" value="" size="50" placeholder="0xd364347feb495...">
-                        <button type="button" id="btn-votes" >Check Votes</button>
+                        <input type="text" id="votesAdd" value="" size="50" placeholder="0xd364347feb495...">
+                        <button type="button" class="btn-votes" data-id="1" >Check Votes</button>
                         <input type="number" id="votesRes" disabled="true" name="votes"value="0">
 
                         
@@ -64,13 +64,13 @@
                         <h3>Fund Airline (Step 3)</h3>
                         <p>Once your airline has been voted in, you may fund the contract (5 ether)</p>
                         <input type="number" id="fundAirline" value="5">ETH
-                        <button type="button" class="btn-fundAirline" data-id="">Fund Airline</button>
+                        <button type="button" class="btn-fundAirline" data-id="2">Fund Airline</button>
 
                         <br>
 
                         <h3>Renounce Airline</h3>
                         <p>You may also renounce your participation in Flight Surety insurance (Note: You will be charged 1 Ether).</p>
-                        <button class="btn-renounce" type="button" data-id="">Renounce your Airline</button>
+                        <button class="btn-renounce" type="button" data-id="3">Renounce your Airline</button>
                         <br><br>
 
                         
@@ -108,7 +108,7 @@
                         <label>Flight Time</label>
                         <input type="text" id="newFlightTime" placeholder="1557002554">
                         <br><br>
-                        <button type="button" class="btn regFlightBtn">Register Flight</button>
+                        <button type="button" class="btn regFlightBtn" data-id="4">Register Flight</button>
 
 
                     </div>
@@ -133,6 +133,9 @@
                         <label>Airline Address: </label>
                         <input type="text" id="airlineAdd" disabled="true" value="" size="50">
                         <br><br>
+                        <label>Flight Number: </label>
+                        <input type="text" id="flightNumber" disabled="true" value="" size="50">
+                        <br><br>
                         <label>Flight Time: </label>
                         <input type="text" id="flightTime" disabled="true" value="" size="50">
                         <br><br>
@@ -140,10 +143,11 @@
                         <input type="text" id="flightStatus" disabled="true" value="" size="50">
                         <br><br>
                         <label>Insurance Amount (max 1 ether) </label>
-                        <input type="number" id="flightStatus" value="" size="50"><button class = "" type="button" >Buy Insurance</button>
+                        <input type="number" id="amountToInsure" value="" size="50">
+                        <button class = "" type="button" data-id="5" >Buy Insurance</button>
                         <br><br>
 
-                        <button class = "btn fetchFlightsBtn" type="button" >Get Flights</button>
+                        <button class = "btn fetchFlightsBtn" type="button" data-id="6">Get Flights</button>
                         <br>
                         
                         
@@ -163,22 +167,25 @@
                         <select id="oraclesFlights"></select>
                         <br><br>
                         <label>Airline Address</label>
-                        <input type="text" id="flightTimeOracles" disabled="true" value="" size="50">
+                        <input type="text" id="airlineAdd-oracles" disabled="true" value="" size="50">
+                        <br><br>
+                        <label>Flight Number: </label>
+                        <input type="text" id="flightNumber-oracles" disabled="true" value="" size="50">
                         <br><br>
                         <label>Flight Time</label>
-                        <input type="text" id="flightTimeOracles" disabled="true" value="" size="50">
+                        <input type="text" id="flightTime-oracles" disabled="true" value="" size="50">
                         <br><br>
                         <label>Flight Status</label>
-                        <input type="text" id="flightStatusOracles" disabled="true" value="" size="50">
+                        <input type="text" id="flightStatus-oracles" disabled="true" value="" size="50">
                         <br><br>
                         <label>Amount Credited</label>
-                        <input type="number" id="insuranceCredit" value="0" size="50">
+                        <input type="number" id="toCredit" disabled="true" value="0" size="50">
                         <br><br>
                         <label>Amount To Withdraw</label>
-                        <input type="number" id="insuranceWithdraw" name = "itemPrice" value="0" size="50"> ETH
+                        <input type="number" id="toWithdraw" name = "itemPrice" value="0" size="50"> ETH
                         <br><br>
-                        <button class="btn checkStatusBtn" type="button">Check Flight Status</button>
-                        <button class="btn withdrawBtn" type="button">Withdraw</button>
+                        <button class="btn checkStatusBtn" type="button" data-id="7">Check Flight Status</button>
+                        <button class="btn withdrawBtn" type="button" data-id="8">Withdraw</button>
                     </div>
                 </div>
             </li>
@@ -186,7 +193,7 @@
             <li class="card" id="card_5">
                 <div id="fifthCard" class="card__content fifth">
                     <div>
-                        <h2>CA/ADMIN</h2>
+                        <h2>CONTRACT OWNER/ADMIN</h2>
                         <p>
                             Only the contract owner and verified admins have access to this card. 
                             This control center allows for the upgrade and pausing of the application smart contract, 
@@ -200,12 +207,12 @@
                             However, some features of this application might have changed for improved user experience. </p>
 
                         <br><br>
-                        <button class = "btn appCaBtn" type="button" >Get App Contract Address</button><br><br>
-                        <button class = "btn getAppStatusBtn" type="button" >Get App Contract Status</button><br><br>
-                        <button class = "btn setAppStatusBtn" type="button" >Set App Contract Status </button><br><br>
-                        <button class = "btn getDataStatusBtn" type="button" >Get Data Contract Status</button><br><br>
-                        <button class = "btn setDataStatus" type="button" >Set Data Contract Status</button><br><br>
-                        <button class = "btn authAppCA" type="button" >Authorise App Contract to Data Contract</button><br><br>
+                        <button class = "btn appCaBtn" type="button" data-id="9">Get App Contract Address</button><br><br>
+                        <button class = "btn getAppStatusBtn" type="button" data-id="10">Get App Contract Status</button><br><br>
+                        <button class = "btn setAppStatusBtn" type="button" data-id="11">Set App Contract Status </button><br><br>
+                        <button class = "btn getDataStatusBtn" type="button" data-id="12">Get Data Contract Status</button><br><br>
+                        <button class = "btn setDataStatus" type="button" data-id="13">Set Data Contract Status</button><br><br>
+                        <button class = "btn authAppCA" type="button" data-id="14">Authorise App Contract to Data Contract</button><br><br>
                         
                     </div>
                 

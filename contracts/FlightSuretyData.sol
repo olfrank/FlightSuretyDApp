@@ -27,6 +27,7 @@ contract FlightSuretyData {
     }     
     //flightKey => flightinfo
     mapping(bytes32 => Flight) private flights;
+    bytes32[] private flightKeys;
 
 
 
@@ -290,6 +291,8 @@ contract FlightSuretyData {
         flights[key].airline = airline;
         flights[key].timestamp = timestamp;
         flights[key].airline = airline;
+
+        flightKeys.push(key);
         emit FlightRegistered(flightNumber);
     }
     
@@ -383,6 +386,16 @@ contract FlightSuretyData {
 
         return(flightNumber, airline, timestamp, statusCode, isRegistered);
     }
+
+    function getAllFlights() external view onlyAuthorisedCallers returns(bytes32[] memory){
+        bytes32[] memory _flightKeys = new bytes32[](flightKeys.length);
+
+        for(uint i = 0; i < flightKeys.length; i++){
+            _flightKeys[i] = flights[flightKeys[i]].flightNumber;
+        }
+        return _flightKeys;
+    }
+
 
 
     function getFlightKey(address airline, string memory flight, uint256 timestamp) 

@@ -305,7 +305,7 @@ contract FlightSuretyApp {
 
 
 
-    function getFlightKey(address airline, string memory flightNumber, uint256 timestamp) pure internal returns(bytes32) {
+    function getFlightKey(address airline, string memory flightNumber, uint256 timestamp) pure public returns(bytes32) {
         return keccak256(abi.encodePacked(airline, flightNumber, timestamp));
     }
 

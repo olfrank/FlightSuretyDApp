@@ -22,6 +22,17 @@ body {
     
 }
 
+hr{
+  border: 1px solid rgb(7, 7, 7);
+}
+
+.airlineHR{
+  margin-bottom: -13px;
+}
+h2{
+  font-size: 1.7em;
+}
+
 .heroSection{
     display: flex;
     /* margin: auto; */
@@ -130,14 +141,16 @@ footer{
     justify-content: center;
     margin-top: 20%;
     background-color: rgb(12, 33, 58);
+    
 
 }
 a{
     font-size: 50px;
     display: flex;
-    color: yellowgreen;
+    color: #fa9800;
     text-decoration: none;
     /* margin: auto; */
+    margin: 20px;
     margin-top: 5%;
     justify-content: center;
 }
@@ -162,7 +175,7 @@ main {
 
 h5 {
     color: #999999;
-    font-family: ticketing;
+    font-family: Ticketing;
 }
 
 section {
@@ -194,19 +207,33 @@ input{
     box-shadow: none;
     border-color:none;
     outline: none;
+    font-size: 0.75em;
   }
   input:focus {
+    border: 3px solid rgb(206, 86, 86);
+  }
+
+  select{
+    background-color: rgb(23, 24, 23);
+    color: #fff;
+    width: 20%;
+    padding: 5px 10px;
+    margin: 10px 0;
+    font-size: 0.75em;
+  }
+
+  select:focus {
     border: 3px solid rgb(206, 86, 86);
   }
 
   button{
     cursor: pointer;
     /* background-color: #9185a5; */
-    background-color: #fbb691;
+    background-color: #cb8282;
     border: none;
     color: rgb(13, 13, 14);
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 0.75em;
     padding: 10px 30px;
     text-decoration: none;
     margin: 4px 2px;
@@ -216,7 +243,7 @@ input{
     font-family: Ticketing;
   }
   button:hover{
-    box-shadow: 0px 0px 10px 2px rgba(43, 42, 42, 0.856);
+    /* box-shadow: 0px 0px 10px 2px rgba(43, 42, 42, 0.856); */
     transform: scale(1.05);
     transition: all 0.3s ease-in-out;
   }
@@ -325,54 +352,44 @@ input{
     width: 95vw;
   }
 
+
+
   .first{
-    /* background: #fddca9; */
-    background: #2A9C9D;
+    background-color: #9cc9bb;
   }
-  /* .first.shade1{
-    background: #c2a882;
-    
-  } */
+  
   .second{
-    /* background: #fbb691; */
-    background: #A1C96A;
-    height: 90vh;
+    background-color: #afc591;
+    height: 93vh;
   }
-  /* .second.shade2{
-    background: #b68469;
-  } */
+  
+
   .third{
-    /* background: #e2b8d5; */
-    background: #FFB24C;
+    background-color: #dfbf95;
     height: 90vh;
   }
-  /* .third.shade3{
-    background: #a7879d;
-  } */
+  
   .fourth{
-    /* background: #a4d9d0; */
-    background: #FFDF98;
-    height: 90vh;
-    
-    
+    background-color: #9f765c;
+    height: 87vh;
   }
+
   .fifth{
-    background: #AE515C;
-    height: 90vh;
+    background-color: #ffae63;
+    /* height: 100vh; */
+    padding-bottom: 4em;
   }
-  /* .fourth.shade4{
-    background: #729791;
-  } */
+ 
   .card__content {
-    box-shadow: 0 0.2em 1em rgba(0, 0, 0, 0.1), 0 1em 2em rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2em 2em rgba(0, 0, 0, 0.1), 0 1em 2em rgba(0, 0, 0, 0.1);
     color: rgb(10, 5, 7);
     border-radius: 1em;
-    border: 2px solid black;
-    overflow:visible;
+    border: 3px solid black;
+    overflow: visible;
   
     display: grid;
     grid-template-areas: "text img";
-    grid-template-columns: 1fr 0.1fr;
+    grid-template-columns: 1fr 0fr;
     grid-template-rows: 100%; 
     align-items: center;
   }
@@ -383,7 +400,7 @@ input{
     height: 100%;
     place-self: center;
     text-align: center;
-    font-size: 1.4vw;
+    font-size: 1.35vw;
     display: flex-start;
     
     place-items: start;
@@ -400,18 +417,94 @@ input{
   } 
   
   .card__content > figure > img {
-    width: 10%;
-    height: 10%; 
+    width: 5%;
+    height: 5%; 
     top: 40px;
     object-fit: contain;
   }
 
 
- 
+  .txhr{
+    border: 1px solid rgb(241, 239, 239);
+  }
+
+  .regAirlinH3{
+    margin-top: -20px;
+  }
+
+
   
 
-  /* ********** BUTTONS ************ */
+  .dataStatusContainer{
+    border-radius: 10px;
+    border: 1px solid rgb(5, 5, 5);
+    display: -webkit-inline-box;
+    padding: 15px;
+  }
+
+  .appStatusContainer{
+    border-radius: 10px;
+    border: 1px solid rgb(5, 5, 5);
+    display: -webkit-inline-box;
+    padding: 15px;
+  }
 
 
+ 
+  .btnCC{
+    background-color: #ffdf98;;
+  }
+
+  .btnA{
+    background-color: #ffdf98;;
+  }
+
+  .btnP{
+    background-color: #ffdf98;;
+  }
+  
+  .btnF{
+    background-color: #ffdf98;
+  }
+
+  .btnIP{
+    background-color: #ffdf98;;
+  }
+
+
+
+
+
+
+  .alert {
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    font-family: Ticketing;
+    margin-top: 1rem
+  }
+
+  .alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+
+  .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.75rem 1.25rem;
+    color: inherit;
+    margin-left: 0.5rem
+  }
   
   

@@ -29,6 +29,24 @@ contract FlightSuretyData {
     mapping(bytes32 => Flight) private flights;
     bytes32[] private flightKeys;
 
+    // function getFlights() external view onlyAuthorisedCallers returns(){
+    //     Flight storage _flights = Flight;
+
+    //     for(uint i = 0; i < flightKeys.length; i++){
+    //         flightKeys[i] = 
+    //     }
+    // }
+
+    // function getFlightsFromFlightNumber(string memory flightNumber) external returns(){
+    //     for(uint i = 0; i < flightKeys.length; i++){
+    //         if(flightKeys[i] = )
+    //     }
+    // }
+
+    
+
+
+
 
 
     /********************************************************************************************/
@@ -152,6 +170,7 @@ contract FlightSuretyData {
     }
 
     function authoriseCaller(address contractAdd) external onlyOwner{
+        require(contractAdd != address(0), "must be a valid address");
         authorisedCallers[contractAdd] = true;
         emit CallerAuthorised(contractAdd);
     }
@@ -286,7 +305,7 @@ contract FlightSuretyData {
                             external 
                             onlyAuthorisedCallers 
                             requireIsOperational {
-
+        
         flights[key].flightNumber = flightNumber;
         flights[key].airline = airline;
         flights[key].timestamp = timestamp;
@@ -387,14 +406,7 @@ contract FlightSuretyData {
         return(flightNumber, airline, timestamp, statusCode, isRegistered);
     }
 
-    function getAllFlights() external view onlyAuthorisedCallers returns(bytes32[] memory){
-        bytes32[] memory _flightKeys = new bytes32[](flightKeys.length);
-
-        for(uint i = 0; i < flightKeys.length; i++){
-            _flightKeys[i] = flights[flightKeys[i]].flightNumber;
-        }
-        return _flightKeys;
-    }
+    
 
 
 

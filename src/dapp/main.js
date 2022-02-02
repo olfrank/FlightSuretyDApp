@@ -5,6 +5,7 @@ var App = {
     contracts: {},
     metamaskAccountId: "0x0000000000000000000000000000000000000000",
     ownerID: "0x0000000000000000000000000000000000000000",
+    flightKeys: [],
 
 
     init: async()=>{    return await App.initWeb3();    },
@@ -77,7 +78,7 @@ var App = {
         let flightKey = $('select#availableFlights options:selected').text();
             try{
                 const dataContract = await App.contracts.FlightSuretyData.deployed();
-                let flightDetails = await dataContract.getFlightDetails(web3.utils.fromUtf8(flightKey));
+                let flightDetails = await dataContract.getFlightDetails(flightKey);
                 if(flightDetails && flightDetails.length > 0){
                     $('#airlineAdd').val(flightDetails[1]);
                     $('#flightNumber').val(flightDetails[0]);
@@ -203,7 +204,9 @@ var App = {
             var amount = web3.utils.toWei($('#fundAirline').val(), 'ether');
             await instance.fundAirline({from: metamaskAccountId, value: amount});
             console.log('successful funding of airline');
+            alert_msg("Your airline has been successfully funded with: " + web3.utils.fromWei(amount) + "ETH", 'success');
         }catch(error){
+            alert_msg("Unfortunately your transaction did not go through, check you have enough ether and try again", 'danger');
             console.log(`Error @ fundAirline: ${error.message}`);
         }
     },
@@ -213,22 +216,40 @@ var App = {
         try{
             const instance = await App.contracts.FlightSuretyData.deployed();
             var fee = web3.utils.toWei("1", 'ether');
-            await instance.renounceAirline({from: metamaskAccountId, value: fee});
+            await instance.renounceAirline({from: App.metamaskAccountId, value: fee});
             console.log('airline successfully removed');
+            alert_msg("Your airline has now been removed from FlightSurety, sorry to see you go :(", 'success');
         }catch(error){
+            alert_msg(
+                "Your airline was not able to be removed, make sure wallet address you are using is the same as the airline address", 
+                'danger');
+
             console.log(`Error @ renounceAirline: ${error.message}`);
         }
     },
 
     registerFlight: async(event)=>{
         event.preventDefault();
+        var airline = App.metamaskAccountId;
+
         try{
             const instance = await App.contracts.FlightSuretyApp.deployed();
+
             var flightNumber = $('#newFlightNumber').val();
             var flightTime = $('#newFlightTime').val();
-            await instance.registerFlight(flightNumber, flightTime);
+
+            await instance.registerFlight(flightNumber, flightTime, {from: airline});
+
+            let flightKey = instance.getFlightKey(airline, flightNumber, flightTime);
+
+            App.flightKeys.push(flightKey);
+
+            alert_msg("Flight has been successfully registered", 'success');
+
             console.log('flight successfully added');
+
         }catch(error){
+            alert_msg("Flight was not able to be registered", 'danger');
             console.log(`Error @ registerFlight: ${error.message}`);
         }
     },
@@ -236,12 +257,24 @@ var App = {
     purchaseInsurance: async(event)=>{
         event.preventDefault();
         try{
+            const dataInstance = await App.contracts.FlightSuretyData.deployed();
+            const appInstance = await App.contracts.FlightSuretyApp.deployed();
+
             let flightKey = $('select#availableFlights options:selected').text();
+            let flightTime = $('#flightTime').val();
+            let airlineAdd = $('#airlineAdd').val();
+
+            let flightKey = await appInstance.getFlightKey(airlineAdd, flightNumber, flightTime)
+
             let amount = web3.utils.toWei($('#amountToInsure').val(), 'ether');
-            const instance = await App.contracts.FlightSuretyData.deployed();
-            await instance.buyInsurance(flightKey,{from: metamaskAccountId, value: amount});
+            await dataInstance.buyInsurance(flightKey,{from: App.metamaskAccountId, value: amount});
+
+            alert_msg(`You Have Successfully Purchased Insurance For Flight Number: ${flightNumber}`, 'success');
+
             console.log('insurance successfully bought');
+
         }catch(error){
+            alert_msg("Your Insurance Purchase Was Unsuccessful", 'danger');
             console.log(`Error @ purchaseInsurance: ${error.message}`);
         }
     },
@@ -250,9 +283,191 @@ var App = {
         event.preventDefault();
         try{
             const instance = await App.contracts.FlightSuretyData.deployed();
-        }
-    }
+             let flightNumbers = [];
+             let _flightKeys = App.flightKeys;
 
+             
+
+            for(let i = 0; i < _flightKeys.length; i++){
+                let res = await instance.getFlightDetails(_flightKeys[i]);
+                let flightNumber = res[0];
+                flightNumbers.push(flightNumber);
+            }
+
+            console.log('flightNumbers array is: '+ flightNumbers)
+
+            var option = '';
+            var flightNum;
+            var flightKey;
+
+            flightNumbers.forEach(flight=>{
+                flightNum = flight;
+                _flightKeys.forEach(flightK =>{
+                    flightKey = flightK;
+                        // flightKey = value & flightNum = display
+                        option += '<option value="'+ flightKey + '">' + flightNum + '</option>';
+                        console.log('<option value="'+ flightKey + '">' + flightNum + '</option>')
+                })
+                
+            });
+            $('#availableFlights').empty();
+            $('#availableFlights').append(option);
+            $('#availableFlights').val(flightNumbers[0]).change();
+
+            $('#oraclesFlights').empty();
+            $('#oraclesFlights').append(option);
+            $('#oraclesFlights').val(flightNumbers[0]).change();
+
+            console.log(`Successfully got a list of ${flightNumbers.length} flight(s)`);
+
+        }catch(error){
+            console.log(`Error @ getFlights: ${error.message}`);
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    getFlightStatus: async(event)=>{
+        event.preventDefault();
+
+        try{
+
+        }catch(error){
+            console.log(`Error @ getFlightStatus: ${error.message}`);
+        }
+    },
+
+    withdraw: async(event)=>{
+        event.preventDefault();
+
+        try{
+
+        }catch(error){
+            console.log(`Error @ withdraw: ${error.message}`);
+        }
+    },
+
+
+    getAppContractAddress: async(event)=>{
+        event.preventDefault();
+
+        try{
+            let instance = await App.contracts.FlightSuretyData.deployed();
+            let appAddress = instance.address;
+            $('#appAddress1').val(appAddress);
+            $('#newAppAddress').val(appAddress);
+
+            console.log("Success @ getAppContractStatus");
+
+        }catch(error){
+            console.log(`Error @ getAppContractAddress: ${error.message}`);
+        }
+    },
+
+
+    getAppContractStatus: async(event)=>{
+        event.preventDefault();
+
+        try{
+            let instance = App.contracts.FlightSuretyApp.deployed();
+            let res = instance.getIsOperational();
+            if(res){
+                $('#appState1').prop("checked", true);
+            }else{
+                $('#appState2').prop("checked", true);
+            }
+            
+
+        }catch(error){
+            console.log(`Error @ getAppContractStatus: ${error.message}`);
+        }
+    },
+
+
+    setAppContractStatus: async(event)=>{
+        event.preventDefault();
+
+        try{
+            let instance = await App.contracts.FlightSuretyApp.deployed();
+            const newStatus = $("input[name='appContractStatus']:checked").val();
+            if(newStatus === "paused"){
+                await instance.setOperationalStatus(true);
+                alert_msg("The App Contract Has Now Been Paused", 'success');
+            }else if (newStatus === "notPaused"){
+                await instance.setOperationalStatus(false);
+                alert_msg("The App Contract Has Now Been Un-Paused", 'success');
+            }
+
+        }catch(error){
+            console.log(`Error @ setAppContractAddress: ${error.message}`);
+        }
+    },
+
+
+    getDataContractStatus: async(event)=>{
+        event.preventDefault();
+
+        try{
+            let instance = App.contracts.FlightSuretyData.deployed();
+            let res = instance.getIsOperational();
+            if(result){
+                $('#dataState1').prop("checked", true);
+            }else{
+                $('#dataState2').prop("checked", true);
+            }
+
+        }catch(error){
+            console.log(`Error @ getAppContractStatus: ${error.message}`);
+        }
+    },
+
+
+    setDataContractStatus: async(event)=>{
+        event.preventDefault();
+
+        try{
+            let instance = await App.contracts.FlightSuretyData.deployed();
+            const newStatus = $("input[name='dataContractStatus']:checked").val();
+            if(newStatus === "paused"){
+                await instance.setOperationalStatus(true);
+                alert_msg("The Data Contract Has Now Been Paused", 'success');
+            }else if (newStatus === "notPaused"){
+                await instance.setOperationalStatus(false);
+                alert_msg("The Data Contract Has Now Been Un-Paused", 'success');
+            }
+
+        }catch(error){
+            console.log(`Error @ setAppContractStatus: ${error.message}`);
+        }
+    },
+
+    authoriseAppToDataContract: async(event)=>{
+        event.preventDefault();
+
+        try{
+            let instance = await App.contracts.FlightSuretyData.deployed()
+            let appAddress = $('#newAppAddress').val();
+            if(!appAddress){
+                alert("Please Enter A Valid Address")
+                alert_msg("Please Enter A Valid Address", 'danger');
+            }else{
+                await instance.authoriseCaller(appAddress);
+                alert_msg("Successfully Authorised a Address: "+ appAddress, 'success');
+            }
+
+        }catch(error){
+            console.log(`Error @ authoriseAppToDataContract: ${error.message}`);
+        }
+    },
 
 
 

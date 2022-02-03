@@ -449,8 +449,8 @@ var App = {
 
         try{
             let instance = App.contracts.FlightSuretyData.deployed();
-            let res = instance.getIsOperational();
-            if(result){
+            let res = instance.methods.operationalStatus().call();
+            if(res){
                 $('#dataState1').prop("checked", true);
             }else{
                 $('#dataState2').prop("checked", true);
@@ -467,7 +467,7 @@ var App = {
 
         try{
             let instance = await App.contracts.FlightSuretyData.deployed();
-            const newStatus = $("input[name='dataContractStatus']:checked").val();
+            let newStatus = $("input[name='dataContractStatus']:checked").val();
             if(newStatus === "paused"){
                 await instance.setOperationalStatus(true);
                 alert_msg("The Data Contract Has Now Been Paused", 'success');

@@ -174,8 +174,12 @@
                 <div id="fourthCard" class="card__content fourth">
                     <div>
                         <h2>INSURANCE PAYOUT</h2>
-                        <p>If your flight is registered and you have purchased insurance for it you are entitled for a payout.</p>
+                        <p>
+                            If you have purchased insurance for your flight and the status code is 20 (flight delay is airlines fault) 
+                            then you are entitled for an insurance claim. Your amount to claim will be 1.5X your insurance purchase amount.
+                        </p>
                         <p>Please select the flight from the dropdown menu and proceed to withdraw.</p>
+                        
                         <hr>
                         Select Flight:
                         <select id="oraclesFlights"></select>
@@ -192,10 +196,10 @@
                         <label>Flight Status</label>
                         <input type="text" id="flightStatus-oracles" disabled="true" value="" size="50">
                         
-                        <br><br><br>
+                        <br><br>
                         <label>Amount Credited</label>
                         <input type="number" id="toCredit" disabled="true" value="0" size="50">
-                        <br><br>
+                        <br>
                         <label>Amount To Withdraw</label>
                         <input type="number" id="toWithdraw" name = "itemPrice" value="0" size="50"> ETH 
                         <br>

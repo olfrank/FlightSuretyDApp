@@ -17,6 +17,12 @@ flightSuretyApp.events.OracleRequest({
     console.log(event)
 });
 
+flightSuretyApp.events.
+
+
+
+
+
 const app = express();
 app.get('/api', (req, res) => {
     res.send({

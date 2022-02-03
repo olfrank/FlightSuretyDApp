@@ -356,20 +356,20 @@ contract FlightSuretyData {
 
     
 
-    function withdraw(bytes32 key) external payable requireIsOperational returns(bool success){
+    function withdraw(bytes32 key, uint256 amountToWithdraw) external payable requireIsOperational returns(bool success){
+        require(amountToWithdraw > 0, "You must enter a valid amount to withdraw");
+
         Insurance[] storage insure = insuree[key];
 
         for(uint256 i = 0; i < insure.length; i ++){
             if(msg.sender == insure[i].passenger){
 
+                require(amountToWithdraw < insure[i].claimAmount, "Value must be lower than claim amount");
+                require(address(this).balance >= amountToWithdraw, "The contract has an insufficient balance");//checks
+
                 address passenger = insure[i].passenger;
-                uint256 amount = insure[i].claimAmount;
-
-                require(address(this).balance >= amount, "The contract has an insufficient balance");
-                require(amount > 0, "There are no funds to withdraw"); //checks
-
-                insure[i].claimAmount = 0; //effects
-                payable(passenger).transfer(amount);//interaction
+                insure[i].claimAmount -= amountToWithdraw; //effects
+                payable(passenger).transfer(amountToWithdraw);//interaction
                 success = true;
             }else{
                 success = false;
@@ -469,6 +469,22 @@ contract FlightSuretyData {
         name = airlines[airlineAdd].name;
 
         return (isRegistered, fundedAmount, name);
+    }
+
+    function getInsuranceInfo(bytes32 key, address passenger) external view returns(uint256 insuredAmount, uint256 claimAmount){
+
+        Insurance[] memory _insurance = insuree[key];
+
+        for(uint256 i = 0; i < _insurance.length; i++){
+            if(passenger == _insurance[i].passenger){
+                insuredAmount = _insurance[i].insuredAmount;
+                claimAmount = _insurance[i].claimAmount;
+            }else{
+                revert("Could not find passenger in argument dependent lookup in Insurance[]");
+            }
+        }
+
+        return (insuredAmount, claimAmount);
     }
 
 

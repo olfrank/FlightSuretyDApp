@@ -9,6 +9,7 @@ contract FlightSuretyData {
     /********************************************************************************************/
     uint256 public constant AIRLINE_REG_FEE = 5 ether;
     uint256 public constant AIRLINE_RENOUNCE_FEE = 1 ether;
+    uint256 public constant MAX_INSURANCE_COVER = 1 ether;
     address private contractOwner;  
     bool private operational = true;  // if false, blocks all state change functions
 
@@ -328,6 +329,7 @@ contract FlightSuretyData {
     // ********************** region: INSURANCE MANAGEMENT **********************
   
     function buyInsurance(bytes32 key) external payable requireIsOperational{
+        require(msg.value <= MAX_INSURANCE_COVER, "Max insurance cover is 1 ether");
         
         Insurance[] storage insure = insuree[key];
 

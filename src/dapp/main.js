@@ -290,7 +290,7 @@ var App = {
 
             for(let i = 0; i < _flightKeys.length; i++){
                 let res = await instance.getFlightDetails(_flightKeys[i]);
-                let flightNumber = res[0];
+                let flightNumber = res[i];
                 flightNumbers.push(flightNumber);
             }
 
@@ -471,7 +471,73 @@ var App = {
 
 
 
+    fetchEvents: function () {
+        if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
+            App.contracts.FlightSuretyData.currentProvider.sendAsync = function () {
+                return App.contracts.FlightSuretyData.currentProvider.send.apply(
+                App.contracts.FlightSuretyData.currentProvider,
+                    arguments
+              );
+            };
+        }
+
+        App.contracts.FlightSuretyData.deployed().then(function(instance) {
+        instance.allEvents(function(err, log){
+          if (!err)
+            App.handleEvents(log);
+        });
+        }).catch(function(err) {
+          console.log("ERROR @ fetchEvents: " + err.message);
+        });
+        
+    },
+
+
+    handleEvents: (log)=>{
+        let logEvent = '';
+
+        switch(log.event){
+            case "FlightRegistered":
+                logEvent = `${log.event} : Flight Number = ${log.args.flightNumber}`;
+                break;
+            case "AirlineRegistered":
+                logEvent = `${log.event} : Airline Address = ${logs.args.airlineName}, Airline Name = ${logs.args.airlineName}, Amount Funded = ${logs.args.amountFunded}`;
+                break;
+            case "ContractPaused":
+                logEvent = `${log.event} : Initiator Address = ${logs.args.pausedBy}, Time = ${logs.args.timestamp}`;
+                break;
+            case "InsuranceBought":
+                logEvent = `${log.event} : Passenger = ${logs.args.passenger}, Flight Number = ${logs.args.amount}, Amount = ${logs.args.amount}`;
+                break;
+            case "Withdraw":
+                logEvent = `${log.event} : Passenger = ${logs.args.passenger}, Amount Withdrawn = ${logs.args.amount}`;
+                break;
+            case "AirlineRenounced":
+                logEvent = `${log.event} : Airline Address = ${logs.args.airline}`;
+                break;
+            case "CallerAuthorised":
+                logEvent = `${log.event} : Caller Address = ${logs.args.contractAdd}`;
+                break;
+            case "CallerDeauthorised":
+                logEvent = `${log.event} : Caller Address = ${logs.args.contractAdd}`;
+                break;
+            case "OperationalStatusChanged":
+                logEvent = `${log.event} : Operantional Status = ${logs.args.mode}`;
+                break;
+
+        }
+
+        $("#tx-events").append('<li>' + eventLog + '</li>');
+    }
 
 
 
-}
+
+
+};
+
+$(function () {
+    $(window).load(function () {
+        App.init();
+    });
+});

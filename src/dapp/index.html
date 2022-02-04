@@ -10,24 +10,71 @@
     <link rel="icon" type="image/x-icon" href="./images/umbrella.ico">
     <link rel="preload" href="Ticketing.woff2" as="font" type="font/woff2" crossorigin>
     <script src="https://kit.fontawesome.com/8d9e2e73ef.js" crossorigin="anonymous"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
 
 </head>
 
 <body>
+    <img class = "welcomeSign" src="./images/welcomeNew.png" alt="">
+    <div class="heroSection ">
 
-    <div class="heroSection">
-        <h1 class = "mainTitle1">Flight </h1><h1 class = "mainTitle2">Surety</h1>
+        <h1 class = "mainTitle1 animate__animated animate__bounceInLeft animate__delay-1s">Flight </h1><h1 class = "mainTitle2 animate__animated animate__bounceInRight animate__delay-1s">Surety</h1>
         
-        <img src="./images/umbreallaLogoFS.png" class="umbrellaLogo"/>
+        <img src="./images/umbreallaLogoFS.png" class="umbrellaLogo animate__animated animate__bounceInUp animate__delay-1s"/>
     </div>
-    <p class="slogan">Making sure you're insured </p>
+    <p class="slogan animate__animated animate__bounceInDown animate__delay_2s ">Making sure you're insured </p>
 
     <p class="arrow fir">ᐯ</p>
     <p class="arrow sec">ᐯ</p>
     <p class="arrow thi">ᐯ</p>
     <p class="arrow fou">ᐯ</p>
     <p class="arrow fif">ᐯ</p>
+
+    <div class = "introContainer">
+        <h1>Welcome to FlightSurety Insurance!</h1>
+        <h2>The simple, safe and secure platform to ensure you're insured</h2>
+        <h3> <u>But really, what is Flight Surety?</u></h3>
+        <p>
+            FlightSurety is an insurance platform where all transactions are settled on the Ethereum blockchain. 
+            This means that all transactions are final, immutable and uncontestable. This provides users with the 
+            assurance that once you have purchased a safety net for your flight, and an unforseen issue causes a delay 
+            or cancellation, you are within your rights to claim back a refund. 
+            <br><br>
+            However, we believe that a refund 
+            doesnt quite cut the mustard, so we add an extra 50% on top of the insurance you bought. For example, 
+            if you purchased insurance for 1 ether, and your flight is delayed due to airline issues, then you are 
+            entitled to receive 1.5 ether back. Whether its business, or pleasure, worry not, as we believe this is 
+            the fairest and stress-free way to travel.
+
+        </p>
+
+        <img class = "palm1" src="./images/palmTreeNococonut.png" alt="">
+        <img class = "palm2" src="./images/palmTreePixel.png" alt="">
+        <img class = "plane" src="./images/welcomeNew.png" alt="">
+
+        <h3 class = "mt-15"><u>How does it work?</u></h3>
+        <p class = "mt-15 pColor">
+            There are 2 actors involved, the airline, and the passenger. An airline will first register
+            their details and pay an upfront fee to be a valued member of FlightSurety. Once they are a registered 
+            airline, they can then proceed to register their flights for passenger insurance purchase. 
+            <br><br>
+            The passenger can jump straight to the 'PASSENGER' section where they can simply select their flight 
+            and enter the amount they wish to insure. Once confirmed, the passenger can check the status of the flight 
+            in the 'INSURANCE PAYOUT' section. This is the important part. If the status code reads 20, meaning the flight 
+            has been delayed due to an airline issue, then the passenger can claim their creditted amount which will 
+            be displayed. From there you can choose to withdraw all or some of your claim. 
+            <br><br>
+            Summary: if you are an airline, jump to 'AIRLINE' and 'FLIGHT' sections. If you are a passenger, 
+            jump to 'PASSENGER' and 'INSURANCE PAYOUT' sections. 
+        </p>
+
+        
+            
+        
+    </div>
 
 
 
@@ -42,7 +89,7 @@
                     <div>
                         <h2>AIRLINE</h2>
                         <h3 class= "regAirlinH3"  >STEP 1 - Register Airline</h3>
-                        <p>
+                        <p class = "mt-10">
                             New airlines may request to be registered by filling out 
                             their details below (Address and Name)
                         </p>
@@ -56,7 +103,7 @@
                         <!-- <div class="divider"></div> -->
                         <hr class = "airlineHR">
                         <h3>STEP 2 - Multiparty Consensus </h3>
-                        <p>
+                        <p class = "mt-10">
                             If your airline is the fifth or above airline to register then you must 
                             be voted in by more than 50% of the existing members. 
                             Here you can check the progress of your registration.
@@ -69,7 +116,7 @@
                         
                         <hr class = "airlineHR">
                         <h3>STEP 3 - Fund Airline</h3>
-                        <p>
+                        <p class = "mt-10">
                             To complete the registration process (after your airline has been voted in) 
                             you must fund your airline (5 ether)
                         </p>
@@ -79,7 +126,7 @@
                         
                         <hr class = "airlineHR">
                         <h3>Renounce Airline</h3>
-                        <p>You may also renounce your participation in FlightSurety insurance (Note: You will be charged 1 Ether).</p>
+                        <p class = "mt-10">You may also renounce your participation in FlightSurety insurance (Note: You will be charged 1 Ether).</p>
                         <button class="btnA btn-renounce" type="button" data-id="3">Renounce your Airline</button>
                         <br><br>
 

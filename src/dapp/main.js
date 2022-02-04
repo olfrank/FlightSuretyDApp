@@ -16,7 +16,7 @@ var App = {
             try{
                 await window.ethereum.enable();
             }catch(error){
-                console.log("User denied account access, reason: "+error);
+                console.log("User denied account access, reason: "+ error.message);
             }
         }else if(window.web3){
             App.web3Provider = window.web3;

@@ -27,7 +27,7 @@ body {
 }
 
 :root {
-  --animate-delay: 0.5s;
+  
   
 }
 
@@ -64,62 +64,6 @@ h2{
     transform: translateX(-120vw);
   }
 }
-
-/* @keyframes fly {
-
-	98.001%, 0% {
-                display: block;
-		transform: translateX(0%) 
-	}
-
-	15% {
-    display: none;
-		transform: translateX(-100vw) 
-	} */
-
-	/* 15.001%, 18% {
-    display: none;
-		transform: translateX(-100vw) 
-	} */
-
-	/* 40% {
-		transform: translateX(0%) 
-	}
-
-	40.001%, 43% {
-		transform: translateX(0%) 
-	}
-
-	65% {
-    display: none;
-		transform: translateX(-100vw) 
-	}
-
-	65.001%, 68% {
-		transform: translateX(20vw) 
-	}
-
-	95% {
-		transform: translateX(10vw) 
-	}
-} */
-/* @keyframes fly{
-  0%{ right: 0%; }
-  5%{ right: 20%; }
-  10%{ right: 40%; }
-  15%{ right: 60%; }
-  20%{ right: 80%; }
-  30%{ right: 100%; }
-  40%{ }
-  41%{ right: 100%; }
-  50%{ right: 80%; }
-  60%{ right: 60%; }
-  70%{right: 40%; }
-  80%{right : 20%}
-  90%{right : 0%}
-  100%{}
-
-} */
 
 .heroSection{
     display: flex;
@@ -168,25 +112,25 @@ h2{
     animation-delay: 1s;
 }
 .sec{
-    margin-top: 3%;
+    margin-top: 2%;
     animation: colorChange 5s infinite;
 
     animation-delay: 2s;
 }
 .thi{
-    margin-top: 3%;
+    margin-top: 2%;
     animation: colorChange 5s infinite;
 
     animation-delay: 3s;
 }
 .fou{
-    margin-top: 3%;
+    margin-top: 2%;
     animation: colorChange 5s infinite;
 
     animation-delay: 4s;
 }
 .fif{
-    margin-top: 3%;
+    margin-top: 2%;
     animation: colorChange 5s infinite;
 
     animation-delay: 5s;
@@ -203,7 +147,7 @@ h2{
     margin: auto;
     margin-top: 20%;
     /* background-color: rgb(56, 155, 180); */
-    background: repeating-linear-gradient(#255f93, #74ABDD 58.9%, #fde47f 57.1%, #dba030 100%);
+    background: repeating-linear-gradient(#3c76aa, #74ABDD 58.9%, #fde47f 57.1%, #e6ba68 100%);
     position: relative;
     /* opacity: 0.9; */
     color: #fff;
@@ -211,8 +155,8 @@ h2{
     width: 90%;
     height: 70%;
     z-index: 1;
-    /* border-radius: 1em;
-    border: 4px solid black; */
+    border-radius: 1em;
+    border: 3px solid black;
 }
 .introContainer>h1{
   font-size: 65px;
@@ -256,12 +200,12 @@ h2{
 }
 
 .plane{
-  width: 36%;
+  width: 25%;
   display: inline-block;
-  margin: -6%;
+  margin: -7%;
   float: right;
   position: relative;
-  left: -7%;
+  left: -15%;
   animation: bob 2s infinite;
 }
 
@@ -436,6 +380,7 @@ input{
     --card-top-offset: 2em;
     --numcards: 5;
     --outline-width: 0px;
+    --animate-delay: 0.5s;
   }
   
   #cards {

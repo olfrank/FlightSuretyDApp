@@ -1,4 +1,3 @@
-const { default: Web3 } = require("../../node_modules./web3/dist/web3.min.js");
 
 var App = {
     web3Provider: null,
@@ -19,7 +18,7 @@ var App = {
                 console.log("User denied account access, reason: "+ error.message);
             }
         }else if(window.web3){
-            App.web3Provider = window.web3;
+            App.web3Provider = window.web3.currentProvider;
         }else{
             App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
             console.log("Using localhost:8545 - Ganache as the web3 provider")
@@ -135,7 +134,14 @@ var App = {
         App.getMetamaskAccountID();
 
         var processId = parseInt($(event.target).data('id'));
-        console.log('processID: ' + processId)
+        
+        if(
+            (event.target.id == "oraclesFlights" && $('#oraclesFlight > option').length == 1) 
+            ||
+            (event.target.id == "availableFlights" && $('#flights > option').length == 1))
+            {
+                return $("#" + event.target.id + "").change();
+            }
 
         switch(processId){
             case 0:
@@ -173,12 +179,16 @@ var App = {
     },
 
     registerAirline: async(event)=>{
-        event.preventDefault();
+        
+        // App.getMetamaskAccountID();
+        // var airline = App.metamaskAccountId;
         try{
+            event.preventDefault();
             const instance = await App.contracts.FlightSuretyApp.deployed();
+            var ca = await instance.address;
             var airlineAdd = $('#newAirlineAdd').val();
             var airlineName = $('#newAirlineName').val();
-            await instance.registerAirline(airlineName, airlineAdd, {from: App.metamaskAccountId});
+            await instance.registerAirline(airlineName, airlineAdd, {from: ca});
             console.log('successfully added to registration queue')
 
         }catch(error){
@@ -392,8 +402,8 @@ var App = {
         event.preventDefault();
 
         try{
-            let instance = await App.contracts.FlightSuretyData.deployed();
-            let appAddress = instance.address;
+            let instance = await App.contracts.FlightSuretyApp.deployed();
+            let appAddress = await instance.address;
             $('#appAddress1').val(appAddress);
             $('#newAppAddress').val(appAddress);
 
@@ -483,7 +493,8 @@ var App = {
 
     authoriseAppToDataContract: async(event)=>{
         event.preventDefault();
-
+        App.getMetamaskAccountID;
+        var caller = App.metamaskAccountId;
         try{
             let instance = await App.contracts.FlightSuretyData.deployed()
             let appAddress = $('#newAppAddress').val();
@@ -491,7 +502,7 @@ var App = {
                 alert("Please Enter A Valid Address")
                 alert_msg("Please Enter A Valid Address", 'danger');
             }else{
-                await instance.authoriseCaller(appAddress);
+                await instance.authoriseCaller(appAddress, {from: caller});
                 alert_msg("Successfully Authorised a Address: "+ appAddress, 'success');
             }
 

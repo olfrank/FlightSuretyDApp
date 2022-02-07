@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "truffle test ./test/flightSurety.js",
-    "dev":"lite-server",
+    "dev": "lite-server",
     "dapp": "webpack-dev-server --mode development --config webpack.config.dapp.js",
     "dapp:prod": "webpack --mode production  --config webpack.config.dapp.js",
     "server": "rm -rf ./build/server && webpack --config webpack.config.server.js"
@@ -39,6 +39,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@openzeppelin/contracts": "^4.4.2",
+    "@truffle/contract": "^4.4.7",
     "@truffle/hdwallet-provider": "^2.0.1",
     "assert": "^2.0.0",
     "crypto-browserify": "^3.12.0",

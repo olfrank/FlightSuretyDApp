@@ -39,8 +39,10 @@
     <div class = "introContainer" data-aos="fade-up-right" data-aos-delay="500" data-aos-duration="200" data-aos-easing="ease-in-sine">
         <h1>Welcome to FlightSurety Insurance!</h1>
         <h2>The simple, safe and secure platform to make sure you're insured</h2>
-        <h3> <u>But really, what is FlightSurety?</u></h3>
+
         <img class = "plane" src="./images/planePixel.png" alt="">
+        
+        <h3> <u>But really, what is FlightSurety?</u></h3>
         <p>
             FlightSurety is an insurance platform where all transactions are settled on the Ethereum blockchain.
             This means that all transactions are final, immutable and uncontestable. 
@@ -307,10 +309,10 @@
                         <div class = "dataStatusContainer">
                             <u>DATA CONTRACT OPERATIONAL STATUS</u>
                             <br><br>
-                            <input type="radio" id="dataState2" name="dataContractStatus" value="paused"/>
+                            <input type="radio" id="dataState1" name="dataContractStatus" value="notPaused"/>
                             <label for="dataState1">Operational</label>
                             <br>
-                            <input type="radio" id="dataState1" name="dataContractStatus" value="notPaused"/> 
+                            <input type="radio" id="dataState2" name="dataContractStatus" value="paused"/> 
                             <label for="dataState2">Not Operational</label>
                             <br><br>
                             <button class = "btnCC getDataStatusBtn" type="button" data-id="12">GET Data Contract Status</button>
@@ -323,11 +325,11 @@
                         <div class = "appStatusContainer">
                             <u>APP CONTRACT OPERATIONAL STATUS</u> 
                             <br>
-                            <input type="radio" id="appState1" name="appContractStatus" value="paused"/>
-                            <label for="appState2">Operational</label>
+                            <input type="radio" id="appState1" name="appContractStatus" value="notPaused"/>
+                            <label for="appState1">Operational</label>
                             <br>
-                            <input type="radio" id="appState2" name="appContractStatus" value="notPaused"/> 
-                            <label for="appState1">Not Operational</label>
+                            <input type="radio" id="appState2" name="appContractStatus" value="paused"/> 
+                            <label for="appState2">Not Operational</label>
                             <br><br>
                             <button class = "btnCC getAppStatusBtn" type="button" data-id="10">GET App Contract Status</button>
                         <button class = "btnCC setAppStatusBtn" type="button" data-id="11">SET App Contract Status </button>

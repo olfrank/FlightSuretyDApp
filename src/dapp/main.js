@@ -179,9 +179,6 @@ var App = {
     },
 
     registerAirline: async(event)=>{
-        
-        // App.getMetamaskAccountID();
-        // var airline = App.metamaskAccountId;
         try{
             event.preventDefault();
             const instance = await App.contracts.FlightSuretyApp.deployed();
@@ -203,10 +200,10 @@ var App = {
 
             const instance = await App.contracts.FlightSuretyData.deployed();
 
-            var numOfAirlines = await instance.getRegisteredAirlines.call().length;
+            var numOfAirlines = await instance.getRegisteredAirlines({from: instance.address}).length;
             console.log(numOfAirlines);
 
-            var numOfVotes = await instance.getApprovals(airlineAdd);
+            var numOfVotes = await instance.getApprovals(airlineAdd, {from: instance.address});
             console.log(numOfVotes);
 
             $('#votesRes').val(`${numOfAirlines}/${numOfVotes}`);
@@ -261,7 +258,7 @@ var App = {
 
             await instance.registerFlight(flightNumber, flightTime, {from: airline});
 
-            let flightKey = instance.getFlightKey(airline, flightNumber, flightTime);
+            let flightKey = await instance.getFlightKey(airline, flightNumber, flightTime, {from: App.metamaskAccountId});
 
             App.flightKeys.push(flightKey);
 
@@ -278,13 +275,13 @@ var App = {
     purchaseInsurance: async(event)=>{
         event.preventDefault();
         try{
-            const dataInstance = await App.contracts.FlightSuretyData.deployed();
+            const instance = await App.contracts.FlightSuretyData.deployed();
 
             let flightKey = $('#availableFlights options:selected').val();
 
             let insureAmount = $('#amountToInsure').val()
             let amount = web3.utils.toWei(insureAmount, 'ether');
-            await dataInstance.buyInsurance(flightKey,{from: App.metamaskAccountId, value: amount});
+            await instance.buyInsurance(flightKey,{from: App.metamaskAccountId, value: amount});
 
             alert_msg(`You Have Successfully Purchased Insurance For Flight Number: ${flightNumber}`, 'success');
 
@@ -419,8 +416,8 @@ var App = {
         event.preventDefault();
 
         try{
-            let instance = App.contracts.FlightSuretyApp.deployed();
-            let res = instance.getIsOperational();
+            let instance = await App.contracts.FlightSuretyApp.deployed();
+            let res = await instance.getIsOperational();
             if(res){
                 $('#appState1').prop("checked", true);
             }else{
@@ -441,10 +438,10 @@ var App = {
             let instance = await App.contracts.FlightSuretyApp.deployed();
             const newStatus = $("input[name='appContractStatus']:checked").val();
             if(newStatus === "paused"){
-                await instance.setOperationalStatus(true);
+                await instance.setOperatingStatus(true, {from: App.metamaskAccountId});
                 alert_msg("The App Contract Has Now Been Paused", 'success');
             }else if (newStatus === "notPaused"){
-                await instance.setOperationalStatus(false);
+                await instance.setOperatingStatus(false, {from: App.metamaskAccountId});
                 alert_msg("The App Contract Has Now Been Un-Paused", 'success');
             }
 
@@ -458,8 +455,8 @@ var App = {
         event.preventDefault();
 
         try{
-            let instance = App.contracts.FlightSuretyData.deployed();
-            let res = instance.methods.operationalStatus().call();
+            let instance = await App.contracts.FlightSuretyData.deployed();
+            let res = await instance.operationalStatus();
             if(res){
                 $('#dataState1').prop("checked", true);
             }else{
@@ -467,7 +464,7 @@ var App = {
             }
 
         }catch(error){
-            console.log(`Error @ getAppContractStatus: ${error.message}`);
+            console.log(`Error @ getDataContractStatus: ${error.message}`);
         }
     },
 
@@ -479,15 +476,15 @@ var App = {
             let instance = await App.contracts.FlightSuretyData.deployed();
             let newStatus = $("input[name='dataContractStatus']:checked").val();
             if(newStatus === "paused"){
-                await instance.setOperationalStatus(true);
+                await instance.setOperatingStatus(true, {from: App.metamaskAccountId});
                 alert_msg("The Data Contract Has Now Been Paused", 'success');
             }else if (newStatus === "notPaused"){
-                await instance.setOperationalStatus(false);
+                await instance.setOperatingStatus(false, {from: App.metamaskAccountId});
                 alert_msg("The Data Contract Has Now Been Un-Paused", 'success');
             }
 
         }catch(error){
-            console.log(`Error @ setAppContractStatus: ${error.message}`);
+            console.log(`Error @ setDataContractStatus: ${error.message}`);
         }
     },
 
@@ -502,7 +499,7 @@ var App = {
                 alert("Please Enter A Valid Address")
                 alert_msg("Please Enter A Valid Address", 'danger');
             }else{
-                await instance.authoriseCaller(appAddress, {from: caller});
+                await instance.authoriseCaller(appAddress, {from: App.metamaskAccountId});
                 alert_msg("Successfully Authorised a Address: "+ appAddress, 'success');
             }
 
@@ -598,7 +595,7 @@ var App = {
                 break;
         }
 
-        $("#tx-events").append('<li>' + eventLog + '</li>');
+        $("#tx-events").append('<li>' + logEvent + '</li>');
     }
 
 

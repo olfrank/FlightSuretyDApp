@@ -1,4 +1,4 @@
-const { default: Web3 } = require("web3");
+const { default: Web3 } = require("../../node_modules./web3/dist/web3.min.js");
 
 var App = {
     web3Provider: null,

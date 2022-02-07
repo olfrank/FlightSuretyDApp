@@ -26,11 +26,6 @@ body {
     
 }
 
-:root {
-  
-  
-}
-
 hr{
   border: 1px solid rgb(7, 7, 7);
 }
@@ -144,89 +139,142 @@ h2{
 
 
 .introContainer{
-    margin: auto;
-    margin-top: 20%;
-    /* background-color: rgb(56, 155, 180); */
-    background: repeating-linear-gradient(#3c76aa, #74ABDD 58.9%, #fde47f 57.1%, #e6ba68 100%);
-    position: relative;
-    /* opacity: 0.9; */
-    color: #fff;
-    padding: 40px;
-    width: 90%;
-    height: 70%;
-    z-index: 1;
-    border-radius: 1em;
-    border: 3px solid black;
+  margin: auto;
+  margin-top: 20%;
+  background: repeating-linear-gradient(#74ABDD, #74ABDD 87.9%, #fde47f 57.1%, #e7be71 100%);
+  position: relative;
+  color: #343434;
+  padding: 40px;
+  width: 90%;
+  height: 124%;
+  height: 88vh;
+  z-index: 1;
+  border-radius: 1em;
+  border: 3px solid black;
 }
+
 .introContainer>h1{
   font-size: 65px;
   margin: auto;
   text-align: center;
-  color: #fa9800;
+  color: #000;
 }
 .introContainer>h2{
-  font-size: 45px;
+  font-size: 43px;
   text-align: center;
   margin: auto;
-  color: #ffe082;
+  color: #eee;
   
 }
 
 .introContainer>h3{
-  font-size: 35px;
+  font-size: 40px;
   text-align: center;
   color: #000;
+  margin-top: 9%;
   
 }
 
 
 .introContainer>p{
-  font-size: 27px;
+  font-size: 28px;
   margin: auto;
   text-align: center;
-  
-  
-  
+  width: 67%;
 }
-.pColor{
-  color: #000000;
+
+.plane{
+  width: 19%;
+  display: inline-block;
+  margin: -20%;
+  float: left;
+  position: relative;
+  left: 65em;
+  animation: bob 3s linear infinite;
 }
 
 .palm1{
   width: 45%;
-  display: inline-block;
-  margin: -9%;
-  float: left;
+    display: inline-block;
+    margin: -25.4%;
+    float: left;
+    position: relative;
+    left: 15em;
 }
-
-.plane{
-  width: 25%;
-  display: inline-block;
-  margin: -7%;
-  float: right;
-  position: relative;
-  left: -15%;
-  animation: bob 2s infinite;
-}
-
-@keyframes bob{
-  0%{top: 0px;}
-  50%{top: 15px;}
-  100%{top: 0px;}
-
-}
-
 .palm2{
   width: 45%;
-  transform: scaleX(-1);
-  display: inline-block;
-  margin: -9%;
-  float: right;
+    transform: scaleX(-1);
+    display: inline-block;
+    margin: -25.4%;
+    float: right;
+    position: relative;
+    left: -14em;
 }
 
 
 
+@keyframes bob{
+  0%{top: 0px; }
+  50%{top: 15px; }
+  100%{top: 0px; }
 
+}
+
+
+
+.explainContainer{
+  margin: auto;
+    margin-top: 20%;
+    background-video: url(./images/StarsBg.mp4);
+    -o-object-fit: cover;
+    object-fit: cover;
+    position: relative;
+    padding: 40px;
+    width: 90%;
+    height: 70%;
+    z-index: 1;
+    border-radius: 1em;
+    
+}
+.explainContainer > video{
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  object-fit: cover;
+  z-index: 0;
+  border-radius: 1em;
+    border: 3px solid rgb(0, 0, 0);
+} 
+
+.explainContainer>h2{
+  font-size: 45px;
+  text-align: center;
+  margin: auto;
+  position: relative;
+  color: #d3d3d3;
+  z-index: 1;
+  
+}
+
+.explainContainer>h3{
+  font-size: 35px;
+  text-align: center;
+  color: #d3d3d3;
+  position: relative;
+  z-index: 1;
+  
+}
+.explainContainer>p{
+  font-size: 28px;
+  margin: auto;
+  text-align: center;
+  color: #d3d3d3;
+  width:75%;
+  position: relative;
+  z-index: 1;
+}
 
 .your-style {
     font-family: 'Ticketing';
@@ -244,8 +292,6 @@ h2{
     color: #fff;
     padding: 40px;
     width: 50%;
-    
-    
 } 
 
 footer{

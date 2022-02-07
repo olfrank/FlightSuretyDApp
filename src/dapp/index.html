@@ -13,6 +13,8 @@
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
 
 </head>
@@ -27,24 +29,29 @@
     </div>
     <p class="slogan animate__animated animate__bounceInDown animate__delay_2s ">Making sure you're insured </p>
 
-    <p class="arrow fir">ᐯ</p>
-    <p class="arrow sec">ᐯ</p>
-    <p class="arrow thi">ᐯ</p>
-    <p class="arrow fou">ᐯ</p>
-    <p class="arrow fif">ᐯ</p>
+    <p class="arrow fir" data-aos="fade-right">ᐯ</p>
+    <p class="arrow sec" data-aos="fade-left">ᐯ</p>
+    <p class="arrow thi" data-aos="fade-right">ᐯ</p>
+    <p class="arrow fou" data-aos="fade-left">ᐯ</p>
+    <p class="arrow fif" data-aos="fade-right">ᐯ</p>
 
-    <div class = "introContainer">
+    <div class = "introContainer" data-aos="fade-up-right" data-aos-delay="500" data-aos-duration="200" data-aos-easing="ease-in-sine">
         <h1>Welcome to FlightSurety Insurance!</h1>
         <h2>The simple, safe and secure platform to make sure you're insured</h2>
         <h3> <u>But really, what is FlightSurety?</u></h3>
+        <img class = "plane" src="./images/planePixel.png" alt="">
         <p>
-            FlightSurety is an insurance platform where all transactions are settled on the Ethereum blockchain. 
-            This means that all transactions are final, immutable and uncontestable. This provides users with the 
-            assurance that once you have purchased a safety net for your flight, and an unforseen issue causes a delay 
+            FlightSurety is an insurance platform where all transactions are settled on the Ethereum blockchain.
+            This means that all transactions are final, immutable and uncontestable. 
+            <br><br>
+            This provides users with the assurance that once you have purchased a safety net for your flight, 
+            and an unforseen issue causes a delay 
             or cancellation, you are within your rights to claim back a refund. 
             <br><br>
             However, we believe that a refund 
-            doesnt quite cut the mustard, so we add an extra 50% on top of the insurance you bought. For example, 
+            doesn't quite cut the mustard, so we add an extra 50% on top of the insurance you bought. 
+            <br><br>
+            For example, 
             if you purchased insurance for 1 ether, and your flight is delayed due to airline issues, then you are 
             entitled to receive 1.5 ether back. Whether its business, or pleasure, worry not, as we believe this is 
             the fairest and stress-free way to travel.
@@ -53,27 +60,42 @@
 
         <img class = "palm1" src="./images/palmTreeNococonut.png" alt="">
         <img class = "palm2" src="./images/palmTreePixel.png" alt="">
-        <img class = "plane" src="./images/planePixel.png" alt="">
+        
 
-        <h3 class = "mt-15"><u>How does it work?</u></h3>
-        <p class = "mt-15 pColor">
-            There are 2 actors involved, the airline, and the passenger. An airline will first register
-            their details and pay an upfront fee to be a valued member of FlightSurety. Once they are a registered 
-            airline, they can then proceed to register their flights for passenger insurance purchase. 
+        
+    </div>
+
+    <div class = "explainContainer" data-aos="fade-up-left"  data-aos-delay="500" data-aos-duration="200" data-aos-easing="ease-in-sine">
+        <video autoplay muted loop src="./images/StarsBg.mp4">
+        
+        </video>
+
+        <h2><u>How does it work?</u></h2>
+        <br>
+        <h3><u>Are you an Airline? (AIRLINE & FLIGHT sections)</u> </h3>
+        <p>
+            AIRLINE section: Airline's will first need to register
+            their details and pay an upfront fee to be a valid member of FlightSurety.
             <br><br>
-            The passenger can jump straight to the 'PASSENGER' section where they can simply select their flight 
-            and enter the amount they wish to insure. Once confirmed, the passenger can check the status of the flight 
-            in the 'INSURANCE PAYOUT' section. This is the important part. If the status code reads 20, meaning the flight 
+            FLIGHT section: Once you are a registered 
+            airline, you can then proceed to register a flight for passengers to insure. 
+        </p>    
+        <br><br>
+
+            <h3><u>Are you a Passenger? (PASSENGER & INSURANCE PAYOUT sections)</u> </h3>
+        <p>
+            PASSENGER section: Passengers simply select their flight from the dropdown menu
+            and enter the amount they wish to insure with. 
+            <br> <br>
+            INSURANCE PAYOUT section: If the status code reads 20, meaning the flight 
             has been delayed due to an airline issue, then the passenger can claim their creditted amount which will 
             be displayed. From there you can choose to withdraw all or some of your claim. 
             <br><br>
-            Summary: if you are an airline, jump to 'AIRLINE' and 'FLIGHT' sections. If you are a passenger, 
+            <u>Summary:</u> <br>
+             if you are an airline, jump to 'AIRLINE' and 'FLIGHT' sections. If you are a passenger, 
             jump to 'PASSENGER' and 'INSURANCE PAYOUT' sections. 
         </p>
 
-        
-            
-        
     </div>
 
 
@@ -342,17 +364,15 @@
         </footer>
 
 
-
-
-
-
-
-
         
     </main>
 
 </body>
 <script src="helpers.js"></script>
 <script src="main.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"> </script>
+<script>
+AOS.init(); 
+</script>
 
 </html>

@@ -1,10 +1,10 @@
 # FlightSurety
 
 ## Overview
-FlightSurety is an insurance solution application for flights backed by the Ethereum blockchain. Passengers are able to insure registered flights to protect against delayed or cancelled flights. Airlines are required to register and fund the contract in order to be a member of the platform. 
+FlightSurety is an insurance solution application for flights backed by the Ethereum blockchain. Passengers are able to insure registered flights to protect against delayed or cancelled flights. Airlines are required to register and submit funding to the contract in order to participate. 
 
 ### Smart contracts
-The backend is architected to have a clear seperation between Data and Logic contracts in order to allow for upgradability in the future. The Data contract (FlightSuretData.sol) is a persistent data storage contract that handles the state changes and payments of ether between parties. The Logic (FlightSuretyApp.sol) contract is the intermediary contract between the UI and the Data contract where all logic and initial checks take place. These two contracts are connected via an interface contract (IFlightSuretyData). 
+The backend is architected to have a clear seperation between Data and Logic in order to allow for upgradability in the future. The Data contract (FlightSuretData.sol) is a persistent data storage contract that handles the state changes and payments of ether between parties. The Logic (FlightSuretyApp.sol) contract is the intermediary contract between the UI and the Data contract where all logic and initial checks take place. These two contracts are connected via an interface contract (IFlightSuretyData). 
 
 ### Frontend 
 The frontend is published on Fleek, an IPFS powered website hosting platform. Using web3/metamask, it communicates with the deployed smart contracts to perform real time state changes and transactions. The frontend design is creative, engaging and user-focused to allow for a pleasant and enjoyable user experience. 
@@ -67,6 +67,12 @@ Tests are located in the `test/` folder where all registration of flights and mu
 
 This repository contains Smart Contract code in Solidity (using Truffle), tests (also using Truffle), dApp (using HTML, CSS and JS) and server app (Node.js - express.js).
 
+### Program Versions
+- Truffle v5.4.28 (core: 5.4.28)
+- Solidity - 0.8.11 (solc-js)
+- Node v14.16.0
+- Web3.js v1.7.0
+
 To install, download or clone the repo, then:
 
 `npm install`
@@ -79,7 +85,7 @@ To run truffle tests:
 `truffle test ./test/flightSurety.js`
 `truffle test ./test/oracles.js`
 
-To use the dapp (lite server):
+To run the dapp locally (lite server):
 
 First open up Ganache GUI, then: 
 `truffle console --network ganache`

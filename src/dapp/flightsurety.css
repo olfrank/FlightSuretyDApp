@@ -26,6 +26,8 @@ body {
     
 }
 
+
+
 hr{
   border: 1px solid rgb(7, 7, 7);
 }
@@ -140,37 +142,31 @@ h2{
 
 .introContainer{
   margin: auto;
-  margin-top: 20%;
-  background: repeating-linear-gradient(#74ABDD, #74ABDD 87.9%, #fde47f 57.1%, #e7be71 100%);
+  margin-top: -16%;
+  background: repeating-linear-gradient(#2e6497, #74ABDD 87.9%, #fde47f 57.1%, #e7be71 100%);
   position: relative;
-  color: #000;
+  color: #000000;
   padding: 40px;
   padding-bottom: 20%;
   width: 100vw;
-  height: 100vh;
-  z-index: 1;
+  height: 145vh;
+  z-index: 0;
   margin-left: -10px;
- 
 }
 
-.introContainer>h1{
-  font-size: 65px;
-  margin: auto;
-  text-align: center;
-  color: #000;
-}
 .introContainer>h2{
-  font-size: 43px;
+  font-size: 60px;
   text-align: center;
   margin: auto;
-  color: #eee;
+  color: rgb(197, 197, 197);
+  margin-top: 15%;
   
 }
 
 .introContainer>h3{
   font-size: 40px;
   text-align: center;
-  color: #000;
+  color: rgb(0, 0, 0);
   margin: auto;
   
 }
@@ -237,7 +233,7 @@ h2{
   z-index: 1;
   /* border-radius: 1em; */
   width: 100vw;
-  height: 91vh;
+  height: 108vh;
     
 }
 /* .explainContainer > video{
@@ -270,12 +266,14 @@ h2{
   background: repeating-linear-gradient(#000000, #2c656e00 100%, #000000 32.1%, #ffcf7500 56%); */
   margin-top: 8px;
   margin-left: -12px;
+  position: relative;
+  z-index: 1;
 }
 
 
 .explainContainer > video{
   width: 110vw;
-  height: 100vh;
+  height: 117vh;
   top: 0;
   left: 0;
   position: absolute;
@@ -286,6 +284,33 @@ h2{
     border: 3px solid rgb(0, 0, 0); */
 } 
 
+.mercury{
+  width: 20%;
+  position: relative;
+  left: 15%;
+}
+
+.neptune{
+  width: 30%;
+  position: relative;
+  left: 20%;
+}
+
+.saturn{
+  width: 25%;
+  position: relative;
+  float:right;
+}
+
+.explainContainer>h1{
+  font-size: 75px;
+    text-align: center;
+    margin: auto;
+    position: relative;
+    color: #815ba0;
+    z-index: 1;
+}
+
 .explainContainer>h2{
   font-size: 45px;
   text-align: center;
@@ -293,8 +318,9 @@ h2{
   position: relative;
   color: #d3d3d3;
   z-index: 1;
-  
 }
+
+
 
 .explainContainer>h3{
   font-size: 35px;
@@ -303,6 +329,7 @@ h2{
   /* color: #5c45c4; */
   position: relative;
   z-index: 1;
+  margin-top: -5%;
   
 }
 .explainContainer>p{
@@ -310,7 +337,7 @@ h2{
   margin: auto;
   text-align: center;
   color: #80acef;
-  width:75%;
+  width:90%;
   position: relative;
   z-index: 1;
 }
@@ -335,20 +362,22 @@ h2{
 
 footer{
     height:20vh;
-    width: 99vw;
+    width: 100vw;
     display: flex;
     justify-content: center;
     margin-top: 20%;
     background-color: rgb(12, 33, 58);
-    
-
+    position: relative;
+    left: -8px;
+    top: 12px;
 }
+
 footer > a{
   font-size: 50px;
   display: flex;
   color: #fa9800;
   text-decoration: none;
-  /* margin: auto; */
+  margin: auto;
   margin: 20px;
   margin-top: 5%;
   justify-content: center;
@@ -361,12 +390,14 @@ footer > a{
 
 
 main {
-    /* width: 100vw; */
+    width: 100vw;
     margin: 0 auto;
-    /* display: flex; */
+    display: grid;
     justify-content: center;
     align-items: center;
-  }
+    /* margin-left: 30px; */
+
+}
 
 
 .umbrellaLogo{

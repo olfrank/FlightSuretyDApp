@@ -231,43 +231,17 @@ contract('Flight Surety Tests', async (accounts) => {
 
 
 
-  it("(airline) should renounce airline and remove from the registered airlines array", async()=>{
-      let result1 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+  // it("(airline) should renounce airline and remove from the registered airlines array", async()=>{
+  //     let result1 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
       
-      console.log(norwegianAdd);
+  //     console.log(norwegianAdd);
 
-      await flightSuretyData.renounceAirline({from: norwegianAdd, value: renounceFee});
+  //     await flightSuretyData.renounceAirline({from: norwegianAdd, value: renounceFee});
 
-      let result2 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+  //     let result2 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
 
-      expect.equal(result1, true, "Should be a registered airline pre removal");
-      expect.equal(result2, false, "Airline should have been removed from array");
-  });
-
-
-
-  // FLIGHT TESTS
-  it("(flight) should register a new flight with the correct input arguments", async()=>{
-
-  });
-
-  it("(flight) should ", async()=>{
-
-  });
-
-  it("(flight)", async()=>{
-
-  });
-
-
-
-
-  // register and fund an airline after > 4 previous airlines
-  
- 
-
-
-
- 
+  //     expect.equal(result1, true, "Should be a registered airline pre removal");
+  //     expect.equal(result2, false, "Airline should have been removed from array");
+  // });
 
 });

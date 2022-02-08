@@ -28,7 +28,11 @@ contract FlightSuretyData {
     }     
     //flightKey => flightinfo
     mapping(bytes32 => Flight) private flights;
-    bytes32[] private flightKeys;
+    bytes32[] public flightKeys;
+
+    function getFlightKeys() public view returns(bytes32[] memory ){
+        return flightKeys;
+    }
 
     // function getFlights() external view onlyAuthorisedCallers returns(){
     //     Flight storage _flights = Flight;

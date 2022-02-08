@@ -27,7 +27,7 @@ oracles = [];
 
       for(let i = 0; i < numOfOracles; i++){
         oracles.push(accounts[i]);
-        await appInstance.methods.registerOracle.send({from: accounts[i], value: fee, gas: 5000000});
+        await appInstance.methods.registerOracle.send({from: accounts[i], value: fee, gas: 999999999});
       }
     }
   } 
@@ -36,7 +36,7 @@ oracles = [];
   var getIndexes = async(address)=> {
     return new Promise((resolve, reject)=>{
       console.log("get Indexes has Started");
-      await appInstance.getMyIndexes.call({from: address, gas: 5000000}).then((err, res)=>{
+      await appInstance.getMyIndexes.call({from: address, gas: 999999999}).then((err, res)=>{
         if(err){
           console.log(`Error @ getIndexes from address: ${address}. ${err.message}`);
           reject(err);
@@ -59,7 +59,7 @@ oracles = [];
         try{
           await appInstance.methods.submitOracleResponse(
             indexes[k], airline, flightNumber, timestamp, statusCode
-          ).send({from: oracles[k], gas: 5000000})
+          ).send({from: oracles[k], gas: 999999999})
 
         }catch(err){
 

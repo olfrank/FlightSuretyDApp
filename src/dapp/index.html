@@ -36,7 +36,7 @@
     <p class="arrow fou" data-aos="fade-left">ᐯ</p>
     <p class="arrow fif" data-aos="fade-right">ᐯ</p>
 
-    <div class = "introContainer" data-aos="fade-up-right" data-aos-delay="500" data-aos-duration="200" data-aos-easing="ease-in-sine">
+    <div class = "introContainer" >
         <h1>Welcome to FlightSurety Insurance!</h1>
         <h2>The simple, safe and secure platform to make sure you're insured</h2>
 
@@ -68,7 +68,9 @@
         
     </div>
 
-    <div class = "explainContainer" data-aos="fade-up-left"  data-aos-delay="500" data-aos-duration="200" data-aos-easing="ease-in-sine">
+    <div class = "top-div"></div>
+    <div class = "explainContainer" >
+        
         <video autoplay muted loop src="./images/StarsBg.mp4">
         
         </video>
@@ -76,7 +78,7 @@
         <h2><u>How does it work?</u></h2>
         <br>
         <h3><u>Are you an Airline? (AIRLINE & FLIGHT sections)</u> </h3>
-        <p>
+        <p class="airlineInfo">
             AIRLINE section: Airline's will first need to register
             their details and pay an upfront fee to be a valid member of FlightSurety.
             <br><br>
@@ -86,7 +88,7 @@
         <br><br>
 
             <h3><u>Are you a Passenger? (PASSENGER & INSURANCE PAYOUT sections)</u> </h3>
-        <p>
+        <p class = "passengerInfo">
             PASSENGER section: Passengers simply select their flight from the dropdown menu
             and enter the amount they wish to insure with. 
             <br> <br>
@@ -98,8 +100,8 @@
              if you are an airline, jump to 'AIRLINE' and 'FLIGHT' sections. If you are a passenger, 
             jump to 'PASSENGER' and 'INSURANCE PAYOUT' sections. 
         </p>
-
     </div>
+    <div class = "bottom-div"></div>
 
 
 
@@ -184,13 +186,16 @@
 
                         <p>
                             Once you are a registered with us at FlightSurety (above steps) you may 
-                            register insurable flights for your passengers
+                            register insurable flights for your passengers. 
+                            <br> <br>
+                            <u>PLEASE NOTE: </u>you must enter unix timestamp format in the Flight Time field. 
+                            A converter can be found <a class = "unix" href="https://www.unixtimestamp.com/">here</a>
                         </p>
                         <label>Flight Number</label>
                         <input type="text" id="newFlightNumber" placeholder="LT3345">
                         <br><br>
                         <label>Flight Time</label>
-                        <input type="text" id="newFlightTime" placeholder="1557002554">
+                        <input type="text" id="newFlightTime" placeholder="1642002554"> unix timestamp 
                         <br><br>
                         <button type="button" class="btnF regFlightBtn" data-id="4">Register Flight</button>
 
@@ -332,13 +337,13 @@
                             <label for="appState2">Not Operational</label>
                             <br><br>
                             <button class = "btnCC getAppStatusBtn" type="button" data-id="10">GET App Contract Status</button>
-                        <button class = "btnCC setAppStatusBtn" type="button" data-id="11">SET App Contract Status </button>
+                            <button class = "btnCC setAppStatusBtn" type="button" data-id="11">SET App Contract Status </button>
                             
                         </div>
                         
                         <br><br><br>
 
-                        <label>Authorise New App Contract Address</label>
+                        <label>Authorise App Contract Address</label>
                         <input id="newAppAddress" type="text" placeholder="0x3B2b4e6325ef6..." value="">
                         <button class = "btnCC authAppCA" type="button" data-id="14">Authorise App Contract to Data Contract</button>
                         

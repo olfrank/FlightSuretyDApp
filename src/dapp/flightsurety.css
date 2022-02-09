@@ -149,7 +149,7 @@ h2{
   padding: 40px;
   padding-bottom: 20%;
   width: 100vw;
-  height: 145vh;
+  height: 150%;
   z-index: 0;
   margin-left: -10px;
 }
@@ -158,8 +158,10 @@ h2{
   font-size: 60px;
   text-align: center;
   margin: auto;
-  color: rgb(197, 197, 197);
+  color: rgb(0, 0, 0);
   margin-top: 15%;
+  right: 2%;
+  position: relative;
   
 }
 
@@ -168,6 +170,8 @@ h2{
   text-align: center;
   color: rgb(0, 0, 0);
   margin: auto;
+  right: 2%;
+  position: relative;
   
 }
 
@@ -178,6 +182,8 @@ h2{
   text-align: center;
   width: 67%;
   margin-top: 3%;
+  right: 2%;
+  position: relative;
 }
 
 .plane{
@@ -191,13 +197,15 @@ h2{
   justify-content: center;
   flex-wrap: wrap;
   flex-direction: column;
+  margin-top: -74%;
+  z-index: 10;
 }
 
 .palm1{
   width: 45%;
   float: left;
   position: relative;
-  top: -16em;
+  top: -18em;
   left: -10em;
 }
 
@@ -206,10 +214,41 @@ h2{
   transform: scaleX(-1);
   float: right;
   position: relative;
-  top: -16em;
+  top: -18em;
   left: 10em;
 }
 
+.cloud1{
+  width:40%;
+  position: relative;
+  z-index: 8;
+  animation: wind 40s ease-in-out infinite;
+  
+}
+.cloud2{
+  width:40%;
+  position: relative;
+  z-index: 7;
+  animation: wind 40s ease-in-out infinite;
+  animation-delay: 1s;
+  
+
+}
+.cloud3{
+  width:40%;
+  position: relative;
+  z-index: 6;
+  animation: wind 40s ease-in-out infinite;
+  animation-delay: 2s;
+  
+  bottom: 45em;
+}
+
+@keyframes wind{
+  0%{ left: 0%}
+  50%{left: 20%}
+  100%{left: 0%}
+}
 
 
 @keyframes bob{
@@ -233,7 +272,7 @@ h2{
   z-index: 1;
   /* border-radius: 1em; */
   width: 100vw;
-  height: 108vh;
+  height: 120%;
     
 }
 /* .explainContainer > video{
@@ -273,7 +312,7 @@ h2{
 
 .explainContainer > video{
   width: 110vw;
-  height: 117vh;
+  height: 101%;
   top: 0;
   left: 0;
   position: absolute;
@@ -287,19 +326,52 @@ h2{
 .mercury{
   width: 20%;
   position: relative;
-  left: 15%;
+  left: 5%;
+  animation: orbit1 25s linear infinite;
+  z-index: 4;
+}
+
+@keyframes orbit2 {
+  0%{right: 2%; z-index: 6;}
+  50%{right: 64%; z-index: 6;}
+  70%{ z-index: 3}
+  100%{ right: 2%; z-index: 6;}
+}
+@keyframes orbit1 {
+  0%{left: 5%; z-index: 4;}
+  50%{left: 60%; z-index: 4;}
+  70%{ z-index: 6}
+  100%{left: 5%; z-index: 4;}
 }
 
 .neptune{
   width: 30%;
   position: relative;
-  left: 20%;
+  left: 15%;
+  z-index: 5;
 }
 
 .saturn{
   width: 25%;
   position: relative;
   float:right;
+  right: 2%;
+  z-index: 6;
+  animation: orbit2 25s ease-in-out infinite;
+}
+
+.astronaut{
+  width:15%;
+  position: relative;
+  z-index: 7;
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%{bottom: 0em; left: 0em; transform: rotate(0deg);}
+  50%{bottom: 20em; left: 5em; transform: rotate(180deg);}
+  75%{bottom: 10em; left: -15em; transform: rotate(360deg);}
+  100%{bottom: 0em; left: 0em; transform: rotate(0deg);}
 }
 
 .explainContainer>h1{
@@ -318,6 +390,7 @@ h2{
   position: relative;
   color: #d3d3d3;
   z-index: 1;
+  right: 4%;
 }
 
 
@@ -330,6 +403,7 @@ h2{
   position: relative;
   z-index: 1;
   margin-top: -5%;
+  right: 2%;
   
 }
 .explainContainer>p{
@@ -340,12 +414,27 @@ h2{
   width:90%;
   position: relative;
   z-index: 1;
+  right: 2%;
 }
 
 .your-style {
     font-family: 'Ticketing';
     font-weight: normal;
     font-style: normal;
+}
+
+.connectContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top:20%;
+}
+.btn-connect{
+  color: orange;
+  border-radius: 1em;
+  border: 3px solid black;
+  background-color: peru;
+  font-size: 30px;
 }
 
 

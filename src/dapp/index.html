@@ -51,6 +51,7 @@
         <img class = "mercury" src="./images/mercuryPixel.png" alt="">
         <img class = "neptune" src="./images/neptunePixel.png" alt="">
         <img class = "saturn" src="./images/saturnPixel.png" alt="">
+        <img class = "astronaut" src="./images/astronaut.png" alt="">
         
         <h3> <u>But really, what is FlightSurety?</u></h3>
         <p>
@@ -80,7 +81,12 @@
 
         <h2><u>How does it work?</u></h2>
 
+        <img class = "cloud1" src="./images/pixelCloud1.png" alt="">
+        <img class = "cloud2" src="./images/pixelCloud2.png" alt="">
+        <img class = "cloud3" src="./images/pixelCloud3.png" alt="">
+
         <img class = "plane" src="./images/planePixel.png" alt="">
+        
 
         <h3><u>Are you an Airline? (AIRLINE & FLIGHT sections)</u> </h3>
         <p class="airlineInfo">
@@ -114,9 +120,6 @@
         
     </div>
 
-  
-
-
 
 
 
@@ -136,22 +139,30 @@
                         Address Of Airline 
                         <input type="text" id="newAirlineAdd" placeholder="0x7A1a2e6368ef2..." value="" size="50" >
                         Name Of Airline
-                        <input type="text" id="newAirlineName" placeholder="EasyFly Airways" value="" size="50"> <br>
+                        <input type="text" id="newAirlineName" placeholder="EasyFly Airways" value="" size="50">
                         
                         <button type="button" class="btnA btn-registerAirline" data-id="0">Register Airline</button>
 
                         <!-- <div class="divider"></div> -->
                         <hr class = "airlineHR">
-                        <h3>STEP 2 - Multiparty Consensus </h3>
+                        <h3>STEP 2 - Multi-party Consensus </h3>
                         <p class = "mt-10">
+                            Here you can approve an airline (Registered) or check on the progress of your registration (Non-Registered). 
                             If your airline is the fifth or above airline to register then you must 
                             be voted in by more than 50% of the existing members. 
-                            Here you can check the progress of your registration.
                         </p>
-                        <label>Input your airline address:</label>
+
+                        <label>APPROVE: Input the airline address you wish to approve:</label>
+                        <input type="text" id="approveAdd" value="" size="50" placeholder="0x7A1a2e6368ef2...">
+                        <button type="button" class="btnA btn-approve" data-id="1" >Approve</button>
+                        <br>
+                        <label>VOTES: Input your airline address:</label>
                         <input type="text" id="votesAdd" value="" size="50" placeholder="0x7A1a2e6368ef2...">
-                        <button type="button" class="btnA btn-votes" data-id="1" >Check Votes</button>
+                        <button type="button" class="btnA btn-votes" data-id="2" >Check Votes</button>
                         <input type="number" id="votesRes" disabled="true" name="votes"value="0">
+
+                        
+                        
 
                         
                         <hr class = "airlineHR">
@@ -161,13 +172,13 @@
                             you must fund your airline (5 ether)
                         </p>
                         <input type="number" id="fundAirline" value="5">ETH
-                        <button type="button" class="btnA btn-fundAirline" data-id="2">Fund Airline</button>
+                        <button type="button" class="btnA btn-fundAirline" data-id="3">Fund Airline</button>
 
                         
                         <hr class = "airlineHR">
                         <h3>Renounce Airline</h3>
                         <p class = "mt-10">You may also renounce your participation in FlightSurety insurance (Note: You will be charged 1 Ether).</p>
-                        <button class="btnA btn-renounce" type="button" data-id="3">Renounce your Airline</button>
+                        <button class="btnA btn-renounce" type="button" data-id="4">Renounce your Airline</button>
                         <br><br>
 
                         
@@ -210,7 +221,7 @@
                         <label>Flight Time</label>
                         <input type="text" id="newFlightTime" placeholder="1642002554"> unix timestamp 
                         <br><br>
-                        <button type="button" class="btnF regFlightBtn" data-id="4">Register Flight</button>
+                        <button type="button" class="btnF regFlightBtn" data-id="5">Register Flight</button>
 
 
                     </div>
@@ -247,7 +258,7 @@
                         <br><br>
                         <label>Insurance Amount (max 1 ether) </label>
                         <input type="number" id="amountToInsure" value="" size="50">
-                        <button class = "btnP buyInsurance" type="button" data-id="5" >Buy Insurance</button>
+                        <button class = "btnP buyInsurance" type="button" data-id="7" >Buy Insurance</button>
                         <br><br>
 
                         
@@ -294,7 +305,7 @@
                         <input type="number" id="toWithdraw" name = "itemPrice" value="0" size="50"> ETH 
                         <br>
                         <button class="btnIP withdrawBtn" type="button" data-id="8">Withdraw</button>
-                        <button class="btnIP checkStatusBtn" type="button" data-id="7">Check Flight Status</button>
+                        <button class="btnIP checkStatusBtn" type="button" data-id="9">Check Flight Status</button>
                     </div>
                 </div>
             </li>
@@ -320,7 +331,7 @@
                         <br>
                         <label>App Contract Address</label>
                         <input id="appAddress1" type="text" placeholder="0x7A1a2e6368ef2..." value="" disabled="true">
-                        <button class = "btnCC appCaBtn" type="button" data-id="9">Get App Contract Address</button>
+                        <button class = "btnCC appCaBtn" type="button" data-id="10">Get App Contract Address</button>
                         <br><br>
 
                         
@@ -333,8 +344,8 @@
                             <input type="radio" id="dataState2" name="dataContractStatus" value="paused"/> 
                             <label for="dataState2">Not Operational</label>
                             <br><br>
-                            <button class = "btnCC getDataStatusBtn" type="button" data-id="12">GET Data Contract Status</button>
-                            <button class = "btnCC setDataStatus" type="button" data-id="13">SET Data Contract Status</button><br>
+                            <button class = "btnCC getDataStatusBtn" type="button" data-id="13">GET Data Contract Status</button>
+                            <button class = "btnCC setDataStatus" type="button" data-id="14">SET Data Contract Status</button><br>
                         </div>
                         
 
@@ -349,8 +360,8 @@
                             <input type="radio" id="appState2" name="appContractStatus" value="paused"/> 
                             <label for="appState2">Not Operational</label>
                             <br><br>
-                            <button class = "btnCC getAppStatusBtn" type="button" data-id="10">GET App Contract Status</button>
-                            <button class = "btnCC setAppStatusBtn" type="button" data-id="11">SET App Contract Status </button>
+                            <button class = "btnCC getAppStatusBtn" type="button" data-id="11">GET App Contract Status</button>
+                            <button class = "btnCC setAppStatusBtn" type="button" data-id="12">SET App Contract Status </button>
                             
                         </div>
                         
@@ -358,7 +369,7 @@
 
                         <label>Authorise App Contract Address</label>
                         <input id="newAppAddress" type="text" placeholder="0x3B2b4e6325ef6..." value="">
-                        <button class = "btnCC authAppCA" type="button" data-id="14">Authorise App Contract to Data Contract</button>
+                        <button class = "btnCC authAppCA" type="button" data-id="15">Authorise App Contract to Data Contract</button>
                         
                     </div>
                 

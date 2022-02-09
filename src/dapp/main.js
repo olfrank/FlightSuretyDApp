@@ -39,6 +39,8 @@ var App = {
         })
     },
 
+    
+
     initFlightContracts: () => {
         var jsonApp = '../../build/contracts/FlightSuretyApp.json';
         var jsonData = '../../build/contracts/FlightSuretyData.json';
@@ -148,37 +150,40 @@ var App = {
             case 0:
                 return await App.registerAirline(event);
             case 1: 
-                return await App.fetchVotes(event);
+                return await App.approveAirline(event);
             case 2:
-                return await App.fundAirline(event);
+                return await App.fetchVotes(event);
             case 3:
-                return await App.renounceAirline(event);
+                return await App.fundAirline(event);
             case 4:
-                return await App.registerFlight(event);
+                return await App.renounceAirline(event);
             case 5:
-                return await App.purchaseInsurance(event);
+                return await App.registerFlight(event);
             case 6:
                 return await App.getFlights(event);
             case 7:
-                return await App.getFlightStatus(event);
+                return await App.purchaseInsurance(event);
             case 8:
                 return await App.withdraw(event);
             case 9:
-                return await App.getAppContractAddress(event);
+                return await App.getFlightStatus(event);
             case 10:
-                return await App.getAppContractStatus(event);
+                return await App.getAppContractAddress(event);
             case 11:
-                return await App.setAppContractStauts(event);
+                return await App.getAppContractStatus(event);
             case 12:
-                return await App.getDataContractStatus(event);
+                return await App.setAppContractStauts(event);
             case 13:
-                return await App.setDataContractStatus(event);
+                return await App.getDataContractStatus(event);
             case 14:
+                return await App.setDataContractStatus(event);
+            case 15:
                 return await App.authoriseAppToDataContract(event);
         }
 
     },
 
+    
     registerAirline: async(event)=>{
         try{
             event.preventDefault();
@@ -192,6 +197,18 @@ var App = {
         }catch(error){
             console.log(`Error @ registerAirline: ${error.message}`);
         };
+    },
+
+    approveAirline: async(event)=>{
+        event.preventDefault();
+        try{
+            var approveAdd = $('#approveAdd').val();
+            var instance = await App.contracts.FlightSuretyApp.deployed();
+            await instance.approveAirline(approveAdd, {from: App.metamaskAccountId});
+
+        }catch(error){
+            console.log(`Error @ approveVotes: ${error.message}`)
+        }
     },
 
     fetchVotes: async(event)=>{
@@ -302,40 +319,53 @@ var App = {
              let _flightKeys = await instance.getFlightKeys({from: App.metamaskAccountId});
              let flightNumbers = [];
              
-
-             
+             var option = '';
 
             for(let i = 0; i < _flightKeys.length; i++){
                 let res = await instance.getFlightDetails(_flightKeys[i], {from: App.metamaskAccountId});
                 let flightNumber = res[0];
                 flightNumbers.push(flightNumber);
-            }
 
-            console.log('flightNumbers array is: '+ flightNumbers)
-            console.log('flightKeys array is: '+ _flightKeys)
-
-            let flightInfo = {
-                    numFlight: flightNumbers,
-                    keyFlight: _flightKeys
-            }
-
-            var option = '';
-            var flightNum;
-            var flightKey;
-
-
-            for(let i = 0; i < flightInfo.length; )
-
-            Object.values(flightInfo).forEach(val => {
                 
-                flightNum = val[0];
-                flightk = val[1];
+                option += '<option value="'+ _flightKeys[i] + '">' + flightNumber + '</option>';
+                console.log('<option value="'+ _flightKeys[i] + '">' + flightNumber + '</option>')
+            }
 
-                console.log(val[0], val[1]);
+            console.log('flightNumbers array is: '+ flightNumbers);
+            console.log('flightKeys array is: '+ _flightKeys);
 
-                    option += '<option value="'+ flightKey + '">' + flightNum + '</option>';
-                    console.log('<option value="'+ flightKey + '">' + flightNum + '</option>')
-            });
+            // flightNumbers.forEach(val =>{
+
+
+            //     option += '<option value="'+ flightKey + '">' + flightNum + '</option>';
+            //     console.log('<option value="'+ flightKey + '">' + flightNum + '</option>')
+            // })
+
+            // console.log('flightNumbers array is: '+ flightNumbers)
+            // console.log('flightKeys array is: '+ _flightKeys)
+
+            // let flightInfo = {
+            //         numFlight: flightNumbers,
+            //         keyFlight: _flightKeys
+            // }
+
+            // var option = '';
+            // var flightNum;
+            // var flightKey;
+
+
+            // for(let i = 0; i < flightInfo.length; )
+
+            // Object.values(flightInfo).forEach(val => {
+                
+            //     flightNum = val[0];
+            //     flightk = val[1];
+
+            //     console.log(val[0], val[1]);
+
+            //         option += '<option value="'+ flightKey + '">' + flightNum + '</option>';
+            //         console.log('<option value="'+ flightKey + '">' + flightNum + '</option>')
+            // });
                 
             
             $('#availableFlights').empty();

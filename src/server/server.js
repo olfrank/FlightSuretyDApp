@@ -1,29 +1,30 @@
-// import FlightSuretyApp from '../../build/contracts/FlightSuretyApp.json';
-// import FlightSuretyData from '../../build/contracts/FlightSuretyData.json';
-// import Config from './config.json';
-// import Web3 from 'web3';
-// import express from 'express';
-
 const FlightSuretyApp = require('../../build/contracts/FlightSuretyApp.json')
 const FlightSuretyData = require('../../build/contracts/FlightSuretyData.json')
 const Config = require('./config.json');
 const Web3 = require('web3');
 const express = require('express');
-const { ValidationError } = require('webpack');
+// const { ValidationError } = require('webpack');
 
 
 var config = Config['localhost'];
 var web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
 web3.eth.defaultAccount = web3.eth.accounts[0];
 var appInstance = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
-var dataInstance = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
+// var dataInstance = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
 
-oracles = [];
-
+var oracles = [];
+var accounts = [];
 
   var registerOracles = async()=> {
     console.log("Register Oracles has Started");
-    var accounts = web3.eth.getAccounts();
+    
+    web3.eth.getAccounts().then((result, error)=>{
+      if(error){
+        console.log(error.message)
+      }else{
+        accounts = result;
+      }
+    });
       
     var numOfOracles = 30;
     console.log(accounts);
@@ -47,7 +48,7 @@ oracles = [];
   var getIndexes = async(address)=> {
     return new Promise(async(resolve, reject)=>{
       console.log("get Indexes has Started");
-      await appInstance.getMyIndexes.call( {from: address, gas: 999999999} ).then((err, res)=>{
+      await appInstance.getMyIndexes().call( {from: address, gas: 999999999} ).then((err, res)=>{
         if(err){
           console.log(`Error @ getIndexes from address: ${address}. ${err.message}`);
           reject(err);

@@ -4,7 +4,7 @@ var App = {
     contracts: {},
     metamaskAccountId: "0x0000000000000000000000000000000000000000",
     ownerID: "0x0000000000000000000000000000000000000000",
-    flightKeys: [],
+    // flightKeys: [],
 
 
     init: async()=>{    return await App.initWeb3();    },
@@ -571,40 +571,67 @@ var App = {
 
         switch(log.event){
             case "FlightRegistered":
-                logEvent = `${log.event} : Flight Number = ${log.args.flightNumber}`;
+                logEvent = `${log.event} : 
+                                            Flight Number = ${log.args.flightNumber}`;
                 break;
             case "AirlineRegistered":
-                logEvent = `${log.event} : Airline Address = ${log.args.airline}, Airline Name = ${log.args.airlineName}, Amount Funded = ${log.args.amountFunded}`;
+                logEvent = `${log.event} : 
+                                            Airline Address = ${log.args.airline}, 
+                                            Airline Name = ${log.args.airlineName}, 
+                                            Amount Funded = ${log.args.amountFunded}`;
                 break;
             case "ContractPaused":
-                logEvent = `${log.event} : Initiator Address = ${log.args.pausedBy}, Time = ${log.args.timestamp}`;
+                logEvent = `${log.event} : 
+                                            Initiator Address = ${log.args.pausedBy}, 
+                                            Time = ${log.args.timestamp}`;
                 break;
             case "InsuranceBought":
-                logEvent = `${log.event} : Passenger = ${log.args.passenger}, Flight Number = ${log.args.amount}, Amount = ${log.args.amount}`;
+                logEvent = `${log.event} : 
+                                            Passenger = ${log.args.passenger}, 
+                                            Flight Number = ${log.args.amount}, 
+                                            Amount = ${log.args.amount}`;
                 break;
             case "Withdraw":
-                logEvent = `${log.event} : Passenger = ${log.args.passenger}, Amount Withdrawn = ${log.args.amount}`;
+                logEvent = `${log.event} : 
+                                            Passenger = ${log.args.passenger}, 
+                                            Amount Withdrawn = ${log.args.amount}`;
                 break;
             case "AirlineRenounced":
-                logEvent = `${log.event} : Airline Address = ${log.args.airline}`;
+                logEvent = `${log.event} : 
+                                            Airline Address = ${log.args.airline}`;
                 break;
             case "CallerAuthorised":
-                logEvent = `${log.event} : Caller Address = ${log.args.contractAdd}`;
+                logEvent = `${log.event} : 
+                                            Caller Address = ${log.args.contractAdd}`;
                 break;
             case "CallerDeauthorised":
-                logEvent = `${log.event} : Caller Address = ${log.args.contractAdd}`;
+                logEvent = `${log.event} : 
+                                            Caller Address = ${log.args.contractAdd}`;
                 break;
             case "OperationalStatusChanged":
-                logEvent = `${log.event} : Operantional Status = ${log.args.mode}`;
+                logEvent = `${log.event} : 
+                                            Operantional Status = ${log.args.mode}`;
                 break;
             case "FlightStatusInfo":
-                logEvent = `${log.event} : Airline Address = ${log.args.airline},  Flight Number = ${log.args.flight}, Timestamp = ${log.args.timestamp}, Status = ${log.args.status}`
+                logEvent = `${log.event} : 
+                                            Airline Address = ${log.args.airline},  
+                                            Flight Number = ${log.args.flight}, 
+                                            Timestamp = ${log.args.timestamp}, 
+                                            Status = ${log.args.status}`
                 break;
             case "OracleReport":
-                logEvent = `${log.event} : Airline Address = ${log.args.airline},  Flight Number = ${log.args.flight}, Timestamp = ${log.args.timestamp}, Status = ${log.args.status}`
+                logEvent = `${log.event} : 
+                                            Airline Address = ${log.args.airline},  
+                                            Flight Number = ${log.args.flight}, 
+                                            Timestamp = ${log.args.timestamp}, 
+                                            Status = ${log.args.status}`
                 break;
             case "OracleRequest":
-                logEvent = `${log.event} : Index = ${log.args.index}, Airline Address = ${log.args.airline}, Flight Number = ${log.args.flight}, Timestamp = ${log.args.timestamp}`
+                logEvent = `${log.event} : 
+                                            Index = ${log.args.index}, 
+                                            Airline Address = ${log.args.airline}, 
+                                            Flight Number = ${log.args.flight}, 
+                                            Timestamp = ${log.args.timestamp}`
                 break;
         }
 

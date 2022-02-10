@@ -135,6 +135,10 @@ h2{
     animation-delay: 5s;
 }
 
+.txArrow{
+  margin-top: 30%;
+}
+
 @keyframes colorChange{
     0%{color:#fa9800;}
     50%{color:#000000;}
@@ -444,7 +448,7 @@ h2{
 
  .txContainer {
     margin: auto;
-    margin-top: 40%;
+    margin-top: 20%;
     background-color: #000;
     opacity: 0.9;
     color: #fff;
@@ -558,6 +562,7 @@ input{
     margin: 10px 0;
     font-size: 0.75em;
   }
+
 
   select:focus {
     border: 3px solid rgb(206, 86, 86);

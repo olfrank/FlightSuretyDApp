@@ -1,8 +1,9 @@
 const FlightSuretyApp = artifacts.require("FlightSuretyApp");
 const FlightSuretyData = artifacts.require("FlightSuretyData");
 const fs = require('fs');
+const Web3 = require('web3');
 
-module.exports = async(deployer) =>{
+module.exports = async(deployer, accounts) =>{
 
     
     // let firstAirlineAdd = "0x445aa111744c93f5a583c355704846b6cae8a3f9";
@@ -22,6 +23,7 @@ module.exports = async(deployer) =>{
     //                 fs.writeFileSync(__dirname + '/../src/server/config.json',JSON.stringify(config, null, '\t'), 'utf-8');
     //             });
     // });
+    
     let firstAirlineAdd = "0x445aa111744c93f5a583c355704846b6cae8a3f9";
     let firstAirlineName = "Qatar Airways";
 

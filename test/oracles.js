@@ -1,6 +1,7 @@
 
 var FlightSuretyApp = artifacts.require("FlightSuretyApp");
 var FlightSuretyData = artifacts.require("FlightSuretyData");
+const assert = require('assert');
 var BigNumber = require('bignumber.js');
 
 contract('Oracles', async (accounts) => {
@@ -14,8 +15,8 @@ contract('Oracles', async (accounts) => {
   var user2;
 
   before('setup contract', async () => {
-    flightSuretyApp = FlightSuretyApp.deployed();
-    flightSuretyData = FlightSuretyData.deployed();
+    flightSuretyApp = await FlightSuretyApp.deployed();
+    flightSuretyData = await FlightSuretyData.deployed();
 
     owner = accounts[0];
     firstAirline = accounts[9];
@@ -29,15 +30,18 @@ contract('Oracles', async (accounts) => {
     const STATUS_CODE_LATE_WEATHER = 30;
     const STATUS_CODE_LATE_TECHNICAL = 40;
     const STATUS_CODE_LATE_OTHER = 50;
+    fee = web3.utils.toWei('5', 'ether');
 
+    await flightSuretyData.fundAirline({from: firstAirline, value: fee});
   });
 
 
   it('can register oracles', async () => {
     
     // ARRANGE
-    let fee = await flightSuretyApp.REGISTRATION_FEE.call();
 
+    let fee = web3.utils.toWei('2', 'ether');
+    
     // ACT
     for(let a=1; a<TEST_ORACLES_COUNT; a++) {      
       await flightSuretyApp.registerOracle({ from: accounts[a], value: fee });
@@ -49,11 +53,20 @@ contract('Oracles', async (accounts) => {
   it('can request flight status', async () => {
     
     // ARRANGE
+    airlineAdd = accounts[2];
+    airlineName = "BA"
+    let airlineFee = web3.utils.toWei('5', 'ether');
+    // await flightSuretyApp.registerAirline(airlineName, airlineAdd, {from: airlineAdd});
+    // await flightSuretyData.fundAirline({from: airlineAdd, value: airlineFee});
+    
     let flight = 'ND1309'; // Course number
     let timestamp = Math.floor(Date.now() / 1000);
 
+    await flightSuretyApp.registerFlight(flight, timestamp, {from: firstAirline});
+    
     // Submit a request for oracles to get status information for a flight
-    await flightSuretyApp.fetchFlightStatus(firstAirline, flight, timestamp);
+    let key = await flightSuretyApp.getFlightKey(firstAirline, flight, timestamp);
+    await flightSuretyApp.fetchFlightStatus(key);
     // ACT
 
     // Since the Index assigned to each test account is opaque by design

@@ -19,7 +19,9 @@ FlightSurety is an insurance solution application for flights backed by the Ethe
 The backend is architected to have a clear seperation between Data and Logic in order to allow for upgradability in the future. The Data contract (FlightSuretData.sol) is a persistent data storage contract that handles the state changes and payments of ether between parties. The Logic (FlightSuretyApp.sol) contract is the intermediary contract between the UI and the Data contract where all logic and initial checks take place. These two contracts are connected via an interface contract (IFlightSuretyData). 
 
 ### Frontend/UX
-The frontend is published on Fleek, an IPFS powered website hosting platform. Using web3/metamask, it communicates with the deployed smart contracts to perform real time state changes and transactions. The frontend design is creative, engaging and user-focused to allow for a pleasant and enjoyable user experience. The theme encompasses a pixel art form, designed to make the insurance process, a typically dull but necassery undertaking, a more enjoyable and engaging one for users. The pixel objects were all made from scratch and rendered as png files. 
+The frontend is published on Fleek, an IPFS powered website hosting platform. Using web3/metamask, it communicates with the deployed smart contracts to perform real time state changes and transactions. 
+<br>
+The frontend design is creative, engaging and user-focused to allow for a pleasant and enjoyable user experience. The theme encompasses a pixel art form, designed to make the insurance process, a typically dull but necassery undertaking, a more enjoyable and engaging one for users. The pixel objects were all made from scratch and rendered as png images. 
 
 ### Server
 There is an express.js (node.js) server which runs in order to simulate the communication and retrieval of oracle data for flight delay statuses which is fed to the Logic (FlightSuretyApp.sol) contract. 
@@ -36,8 +38,8 @@ There is an express.js (node.js) server which runs in order to simulate the comm
 #### 1.1 Step 1 - Register Airline
 - Unregistered airlines are prompted to input their Ethereum address and airline name to initialise their registration. 
 #### 1.2 Step 2 - Multiparty Consensus
-- Only existing airline may register a new airline until there are at least four airlines registered. 
-- Registration of fifth and subsequent airlines requires multi-party consensus approval of 50% or more from registered airlines.
+- Airline registration is initialised immediately until there are at least four airlines registered. 
+- Registration of fifth and subsequent airlines requires multi-party consensus approval of 50% or more of registered airlines.
 - Approval of a new airline can be carried out here by inputing the airline address and clicking "Approve".
 - Airlines in waiting can check the progress of their multi-party conensus by inputing their address and clicking the `check votes` button. 
 #### 1.3 Step 3 - Fund Airline 

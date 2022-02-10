@@ -1,42 +1,53 @@
-import FlightSuretyApp from '../../build/contracts/FlightSuretyApp.json';
-import FlightSuretyData from '../../build/contracts/FlightSuretyData.json';
-import Config from './config.json';
-import Web3 from 'web3';
-import express from 'express';
+// import FlightSuretyApp from '../../build/contracts/FlightSuretyApp.json';
+// import FlightSuretyData from '../../build/contracts/FlightSuretyData.json';
+// import Config from './config.json';
+// import Web3 from 'web3';
+// import express from 'express';
+
+const FlightSuretyApp = require('../../build/contracts/FlightSuretyApp.json')
+const FlightSuretyData = require('../../build/contracts/FlightSuretyData.json')
+const Config = require('./config.json');
+const Web3 = require('web3');
+const express = require('express');
+const { ValidationError } = require('webpack');
 
 
-let config = Config['localhost'];
-let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
+var config = Config['localhost'];
+var web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
 web3.eth.defaultAccount = web3.eth.accounts[0];
-let appInstance = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
-let dataInstance = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
+var appInstance = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
+var dataInstance = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
 
 oracles = [];
 
 
   var registerOracles = async()=> {
     console.log("Register Oracles has Started");
-    let accounts = await web3.eth.getAccounts();
-    let numOfOracles = 30;
+    var accounts = web3.eth.getAccounts();
+      
+    var numOfOracles = 30;
+    console.log(accounts);
 
     if(numOfOracles > accounts.length){
       numOfOracles = accounts.length;
 
     }else{
-      const fee = await appInstance.methods.REGISTRATION_FEE().call();
+      // const fee = await appInstance.methods.REGISTRATION_FEE().call();
+      let fee = web3.utils.toWei('1', 'ether')
 
       for(let i = 0; i < numOfOracles; i++){
         oracles.push(accounts[i]);
-        await appInstance.methods.registerOracle.send({from: accounts[i], value: fee, gas: 999999999});
+        console.log(accounts[i]);
+        await appInstance.methods.registerOracle().send( {from: accounts[i], value: fee, gas: 999999999} );
       }
     }
   } 
 
 
   var getIndexes = async(address)=> {
-    return new Promise((resolve, reject)=>{
+    return new Promise(async(resolve, reject)=>{
       console.log("get Indexes has Started");
-      await appInstance.getMyIndexes.call({from: address, gas: 999999999}).then((err, res)=>{
+      await appInstance.getMyIndexes.call( {from: address, gas: 999999999} ).then((err, res)=>{
         if(err){
           console.log(`Error @ getIndexes from address: ${address}. ${err.message}`);
           reject(err);
@@ -82,7 +93,7 @@ oracles = [];
   } 
   
 
-  flightSuretyApp.events.OracleRequest({fromBlock: 0}, function (error, event) {
+  appInstance.events.OracleRequest({fromBlock: 0}, function (error, event) {
     if (error) {
       console.log(error)
     }else{
@@ -92,7 +103,7 @@ oracles = [];
   });
 
 
-  flightSuretyApp.events.OracleReport({fromBlock: 0 }, function(error, event){
+  appInstance.events.OracleReport({fromBlock: 0 }, function(error, event){
     if(error){
       console.log(error);
     }else{
@@ -107,7 +118,7 @@ oracles = [];
   })
 
 
-  flightSuretyApp.events.FlightStatusInfo({fromBlock: 0 }, function(error, event){
+  appInstance.events.FlightStatusInfo({fromBlock: 0 }, function(error, event){
     if(error){
       console.log(error);
     }else{
@@ -132,6 +143,10 @@ app.get('/api', (req, res) => {
 })
 registerOracles();
 
-export default app;
+module.export = { 
+  app
+}
+
+
 
 

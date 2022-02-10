@@ -77,18 +77,19 @@ var App = {
         }
     },
 
-    getInsuranceFlightDetails: async()=>{
-        let flightKey = $('#availableFlights options:selected').val();
-        let passenger = App.metamaskAccountId;
+    getInsuranceFlightDetails: async(event)=>{
         // var element = $('#availableFlights');
         // var flightKey = element.options[element.selectedIndex].value;
-
+        let _flightKey = $('#availableFlights option:selected').val();
+        let passenger = App.metamaskAccountId;
             try{
+                
                 const dataContract = await App.contracts.FlightSuretyData.deployed();
-                let flightDetails = await dataContract.getFlightDetails(flightKey);
+                
+                let flightDetails = await dataContract.getFlightDetails(_flightKey,{from: passenger});
                 
 
-                if(flightDetails && flightDetails.length > 0){
+                if(flightDetails){
                     $('#airlineAdd').val(flightDetails[1]);
                     $('#flightNumber').val(flightDetails[0]);
                     $('#flightTime').val(flightDetails[2]);
@@ -96,27 +97,28 @@ var App = {
                     
 
                 }else{
-                    console.log(`Error: Unable to fetch flight details for ${flightKey}`)
+                    console.log(`Error: Unable to fetch flight details for ${_flightKey}`)
                 }
-                console.log('successful');
+                console.log(`successfully fetched flight details for: ${_flightKey} ${flightDetails}`);
 
             }catch(error){
-                console.log(`Unable to fetch flight details for: ${flightKey}, reason given: ${error.message}`)
+                console.log(`Unable to fetch flight details for: ${_flightKey}, reason given: ${error.message}`)
             }
     },
 
-    getWithdrawFlightDetails: async()=>{
+    getWithdrawFlightDetails: async(event)=>{
         App.getMetamaskAccountID();
-        let flightKey = $('#oraclesFlights options:selected').val();
+        var flightKey = $('#oraclesFlights option:selected').val();
         console.log(`flightKey: ${flightKey}`);
-        let passenger = App.metamaskAccountId;
+        var passenger = App.metamaskAccountId;
         try{
             const dataContract = await App.contracts.FlightSuretyData.deployed();
-            let flightDetails = await dataContract.getFlightDetails(web3.utils.fromUtf8(flightKey));
-            let creditAmount = await dataContract.getWithdrawAmount(web3.utils.fromUtf8(flightKey), {from: passenger});
+            let flightDetails = await dataContract.getFlightDetails(flightKey);
+            let creditAmount = await dataContract.getWithdrawAmount(flightKey, {from: passenger});
             let amount = web3.utils.fromWei(creditAmount, 'ether');
             console.log(creditAmount);
-            if(flightDetails && flightDetails.length > 0){
+
+            if(flightDetails){
                 $('#airlineAdd-oracles').val(flightDetails[1]);
                 $('#flightNumber-oracles').val(flightDetails[0]);
                 $('#flightTime-oracles').val(flightDetails[2]);
@@ -295,15 +297,23 @@ var App = {
         try{
             const instance = await App.contracts.FlightSuretyData.deployed();
 
-            let flightKey = $('#availableFlights options:selected').val();
-
-            let insureAmount = $('#amountToInsure').val()
+            let flightKey = $('#availableFlights option:selected').val();
+            console.log(flightKey);
+            let insureAmount = $('#amountToInsure').val();
+            console.log($('#amountToInsure').val())
             let amount = web3.utils.toWei(insureAmount, 'ether');
-            await instance.buyInsurance(flightKey,{from: App.metamaskAccountId, value: amount});
+            console.log(amount)
+            if(flightKey && amount){
+                await instance.buyInsurance(flightKey,{from: App.metamaskAccountId, value: amount});
+                console.log('insurance successfully bought');
+            }else{
+                console.log("must select a flight and input a valid amount");
+            }
+            
 
-            alert_msg(`You Have Successfully Purchased Insurance For Flight Number: ${flightNumber}`, 'success');
+            // alert_msg(`You Have Successfully Purchased Insurance For Flight Number: ${flightNumber}`, 'success');
 
-            console.log('insurance successfully bought');
+            
 
         }catch(error){
             alert_msg("Your Insurance Purchase Was Unsuccessful", 'danger');
@@ -333,48 +343,15 @@ var App = {
 
             console.log('flightNumbers array is: '+ flightNumbers);
             console.log('flightKeys array is: '+ _flightKeys);
-
-            // flightNumbers.forEach(val =>{
-
-
-            //     option += '<option value="'+ flightKey + '">' + flightNum + '</option>';
-            //     console.log('<option value="'+ flightKey + '">' + flightNum + '</option>')
-            // })
-
-            // console.log('flightNumbers array is: '+ flightNumbers)
-            // console.log('flightKeys array is: '+ _flightKeys)
-
-            // let flightInfo = {
-            //         numFlight: flightNumbers,
-            //         keyFlight: _flightKeys
-            // }
-
-            // var option = '';
-            // var flightNum;
-            // var flightKey;
-
-
-            // for(let i = 0; i < flightInfo.length; )
-
-            // Object.values(flightInfo).forEach(val => {
-                
-            //     flightNum = val[0];
-            //     flightk = val[1];
-
-            //     console.log(val[0], val[1]);
-
-            //         option += '<option value="'+ flightKey + '">' + flightNum + '</option>';
-            //         console.log('<option value="'+ flightKey + '">' + flightNum + '</option>')
-            // });
                 
             
             $('#availableFlights').empty();
             $('#availableFlights').append(option);
-            $('#availableFlights').val(flightInfo.flightNumbers[0]).change();
+            $('#availableFlights').val(flightNumbers[0]).change();
 
             $('#oraclesFlights').empty();
             $('#oraclesFlights').append(option);
-            $('#oraclesFlights').val(flightInfo.flightNumbers[0]).change();
+            $('#oraclesFlights').val(flightNumbers[0]).change();
 
             console.log(`Successfully got a list of ${flightNumbers.length} flight(s)`);
 
@@ -398,7 +375,7 @@ var App = {
         event.preventDefault();
 
         try{
-            let flightKey = $('#availableFlights options:selected').val();
+            let flightKey = $('#oraclesFlights option:selected').val();
             let instance = await App.contracts.FlightSuretyData.deployed();
             if(flightKey){
                 let res = await instance.getFlightDetails(flightKey, {from: App.metamaskAccountId});
@@ -413,7 +390,7 @@ var App = {
 
     withdraw: async(event)=>{
         event.preventDefault();
-        let flightKey = $('#availableFlights options:selected').val();
+        let flightKey = $('#availableFlights option:selected').val();
         
         try{
             let instance = App.contracts.FlightSuretyData.deployed();
@@ -557,7 +534,7 @@ var App = {
         }
 
         App.contracts.FlightSuretyData.deployed().then(function(instance) {
-        instance.allEvents(function(err, log){
+        instance.events.allEvents(function(err, log){
           if (!err)
             App.handleEvents(log);
         });
@@ -578,7 +555,7 @@ var App = {
         }
 
         App.contracts.FlightSuretyApp.deployed().then(function(instance) {
-        instance.allEvents(function(err, log){
+        instance.events.allEvents(function(err, log){
           if (!err)
             App.handleEvents(log);
         });
@@ -597,37 +574,37 @@ var App = {
                 logEvent = `${log.event} : Flight Number = ${log.args.flightNumber}`;
                 break;
             case "AirlineRegistered":
-                logEvent = `${log.event} : Airline Address = ${logs.args.airlineName}, Airline Name = ${logs.args.airlineName}, Amount Funded = ${logs.args.amountFunded}`;
+                logEvent = `${log.event} : Airline Address = ${log.args.airline}, Airline Name = ${log.args.airlineName}, Amount Funded = ${log.args.amountFunded}`;
                 break;
             case "ContractPaused":
-                logEvent = `${log.event} : Initiator Address = ${logs.args.pausedBy}, Time = ${logs.args.timestamp}`;
+                logEvent = `${log.event} : Initiator Address = ${log.args.pausedBy}, Time = ${log.args.timestamp}`;
                 break;
             case "InsuranceBought":
-                logEvent = `${log.event} : Passenger = ${logs.args.passenger}, Flight Number = ${logs.args.amount}, Amount = ${logs.args.amount}`;
+                logEvent = `${log.event} : Passenger = ${log.args.passenger}, Flight Number = ${log.args.amount}, Amount = ${log.args.amount}`;
                 break;
             case "Withdraw":
-                logEvent = `${log.event} : Passenger = ${logs.args.passenger}, Amount Withdrawn = ${logs.args.amount}`;
+                logEvent = `${log.event} : Passenger = ${log.args.passenger}, Amount Withdrawn = ${log.args.amount}`;
                 break;
             case "AirlineRenounced":
-                logEvent = `${log.event} : Airline Address = ${logs.args.airline}`;
+                logEvent = `${log.event} : Airline Address = ${log.args.airline}`;
                 break;
             case "CallerAuthorised":
-                logEvent = `${log.event} : Caller Address = ${logs.args.contractAdd}`;
+                logEvent = `${log.event} : Caller Address = ${log.args.contractAdd}`;
                 break;
             case "CallerDeauthorised":
-                logEvent = `${log.event} : Caller Address = ${logs.args.contractAdd}`;
+                logEvent = `${log.event} : Caller Address = ${log.args.contractAdd}`;
                 break;
             case "OperationalStatusChanged":
-                logEvent = `${log.event} : Operantional Status = ${logs.args.mode}`;
+                logEvent = `${log.event} : Operantional Status = ${log.args.mode}`;
                 break;
             case "FlightStatusInfo":
-                logEvent = `${log.event} : Airline Address = ${logs.args.airline},  Flight Number = ${logs.args.flight}, Timestamp = ${logs.args.timestamp}, Status = ${logs.args.status}`
+                logEvent = `${log.event} : Airline Address = ${log.args.airline},  Flight Number = ${log.args.flight}, Timestamp = ${log.args.timestamp}, Status = ${log.args.status}`
                 break;
             case "OracleReport":
-                logEvent = `${log.event} : Airline Address = ${logs.args.airline},  Flight Number = ${logs.args.flight}, Timestamp = ${logs.args.timestamp}, Status = ${logs.args.status}`
+                logEvent = `${log.event} : Airline Address = ${log.args.airline},  Flight Number = ${log.args.flight}, Timestamp = ${log.args.timestamp}, Status = ${log.args.status}`
                 break;
             case "OracleRequest":
-                logEvent = `${log.event} : Index = ${logs.args.index}, Airline Address = ${logs.args.airline}, Flight Number = ${logs.args.flight}, Timestamp = ${logs.args.timestamp}`
+                logEvent = `${log.event} : Index = ${log.args.index}, Airline Address = ${log.args.airline}, Flight Number = ${log.args.flight}, Timestamp = ${log.args.timestamp}`
                 break;
         }
 

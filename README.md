@@ -76,7 +76,7 @@ There is an express.js (node.js) server which runs in order to simulate the comm
 
 ## Tests 
 Tests are located in the `test/` folder where all registration of flights and multi-party consensus tests are carried out. All tests pass. 
-
+![](./src/dapp/images/testsPass.png)
 
 ## Installing
 

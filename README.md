@@ -18,7 +18,7 @@ FlightSurety is an insurance solution application for flights backed by the Ethe
 ### Smart contracts
 The backend is architected to have a clear seperation between Data and Logic in order to allow for upgradability in the future. The Data contract (FlightSuretData.sol) is a persistent data storage contract that handles the state changes and payments of ether between parties. The Logic (FlightSuretyApp.sol) contract is the intermediary contract between the UI and the Data contract where all logic and initial checks take place. These two contracts are connected via an interface contract (IFlightSuretyData). 
 
-### Frontend/UX
+### Frontend/UX https://aged-scene-6641.on.fleek.co/src/dapp/
 The frontend is published on Fleek, an IPFS powered website hosting platform. Using web3/metamask, it communicates with the deployed smart contracts to perform real time state changes and transactions. 
 <br>
 The frontend design is creative, engaging and user-focused to allow for a pleasant and enjoyable user experience. The theme encompasses a pixel art form, designed to make the insurance process, a typically dull but necassery undertaking, a more enjoyable and engaging one for users. The pixel objects were all made from scratch and rendered as png images. 

@@ -437,6 +437,11 @@ contract FlightSuretyData {
         return registeredAirlines;
     }
 
+    function getNumberOfRegAirlines() external view requireIsOperational 
+                                   onlyAuthorisedCallers 
+                                   returns(uint256 numberOf){
+        return registeredAirlines.length;
+    }
 
     function getApprovals(address airlineAdd) 
                           external 

@@ -506,7 +506,9 @@ main {
 }
 
 .mt-10{
-  margin-top: -15px;
+  margin-top: -20px;
+  margin-bottom: 5px;
+
 }
 .mt-15{
   margin-top: 26%;
@@ -576,9 +578,9 @@ input{
     color: rgb(13, 13, 14);
     border-radius: 5px;
     font-size: 0.75em;
-    padding: 10px 30px;
+    padding: 10px 22px;
     text-decoration: none;
-    margin: 4px 2px;
+    margin: 2px 2px;
     cursor: pointer;
     transition: 0.3s ease-in-out;
     font-weight: bold;

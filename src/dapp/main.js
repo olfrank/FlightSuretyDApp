@@ -181,14 +181,30 @@ var App = {
                 return await App.setDataContractStatus(event);
             case 15:
                 return await App.authoriseAppToDataContract(event);
+            case 16:
+                return await App.getNumberRegisteredAirlines(event);
         }
 
     },
 
+
+    getNumberRegisteredAirlines: async(event)=>{
+        event.preventDefault();
+        try{
+            const instance = await App.contracts.FlightSuretyData.deployed();
+            var numberOf = await instance.FlightSuretyData.getRegisteredAirlines({from: instance.address});
+            // console.log(numberOf);
+            console.log(numberOf.length)
+            $('#numAirlines').text(numberOf);
+
+        }catch(error){
+            console.log(`Error @ getNumberRegisteredAirlines: ${error.message}`);
+        }
+    },
     
     registerAirline: async(event)=>{
+        event.preventDefault();
         try{
-            event.preventDefault();
             const instance = await App.contracts.FlightSuretyApp.deployed();
             // var ca = await instance.address;
             var airlineAdd = $('#newAirlineAdd').val();

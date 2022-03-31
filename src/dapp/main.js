@@ -542,8 +542,7 @@ var App = {
         if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
             App.contracts.FlightSuretyData.currentProvider.sendAsync = function () {
                 return App.contracts.FlightSuretyData.currentProvider.send.apply(
-                App.contracts.FlightSuretyData.currentProvider,
-                    arguments
+                App.contracts.FlightSuretyData.currentProvider, arguments
               );
             };
         }
@@ -563,8 +562,7 @@ var App = {
         if (typeof App.contracts.FlightSuretyApp.currentProvider.sendAsync !== "function") {
             App.contracts.FlightSuretyApp.currentProvider.sendAsync = function () {
                 return App.contracts.FlightSuretyApp.currentProvider.send.apply(
-                App.contracts.FlightSuretyApp.currentProvider,
-                    arguments
+                App.contracts.FlightSuretyApp.currentProvider, arguments
               );
             };
         }

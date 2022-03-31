@@ -280,17 +280,18 @@ contract FlightSuretyData {
             if(airlineAdd == registeredAirlines[i]){
                 //address toRemove = registeredAirlines[i];
                 indexToRemove = i;
-
-            }else{
-
-                revert("airline address not found in registeredAirlines[]");
+            }
+            
+            if(i == registeredAirlines.length && airlineAdd != registeredAirlines[i]){
+                revert("Airline address not found in registerAirlines array");
             }
         }
 
         for(uint k = indexToRemove; k < lastIndex; k++){
             registeredAirlines[k] = registeredAirlines[k + 1];
         }
-        delete registeredAirlines[lastIndex];
+        registeredAirlines.pop();
+
         airlines[airlineAdd].isRegistered = false;
         airlines[airlineAdd].fundedAmount = 0;
 

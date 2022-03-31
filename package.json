@@ -9,11 +9,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "truffle test ./test/flightSurety.js",
+    "test": "truffle.cmd test",
     "dev": "lite-server",
+    "server": "node ./src/server/index.js",
+
     "dapp": "webpack-dev-server --mode development --config webpack.config.dapp.js",
-    "dapp:prod": "webpack --mode production  --config webpack.config.dapp.js",
-    "server": "node ./src/server/index.js"
+    "dapp:prod": "webpack --mode production  --config webpack.config.dapp.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

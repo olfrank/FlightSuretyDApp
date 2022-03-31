@@ -231,17 +231,34 @@ contract('Flight Surety Tests', async (accounts) => {
 
 
 
-  // it("(airline) should renounce airline and remove from the registered airlines array", async()=>{
-  //     let result1 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+  it("(airline) should renounce airline and remove from the registered airlines array", async()=>{
+      let res1 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
       
-  //     console.log(norwegianAdd);
+      console.log(norwegianAdd);
 
-  //     await flightSuretyData.renounceAirline({from: norwegianAdd, value: renounceFee});
+      let res2 = await flightSuretyData.getRegisteredAirlines.call({from: flightSuretyApp.address });
+      
+      await flightSuretyData.renounceAirline({from: norwegianAdd, value: renounceFee});
 
-  //     let result2 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+      // let res2 = await flightSuretyData.isRegisteredAirline.call(norwegianAdd);
+      await flightSuretyData.getAirlineDetails.call(norwegianAdd, {from: flightSuretyApp.address}).then((res)=>{
+          var isRegistered = res[0];
+          var amount = res[1];
+          var name = res[2];
+          assert.equal(isRegistered, false, "Incorrect bool value");
+          assert.equal(amount, 0, "Incorrect amount funded");
+          assert.equal(name, "Norwegian Air", "Incorrect name value");
+      })
 
-  //     expect.equal(result1, true, "Should be a registered airline pre removal");
-  //     expect.equal(result2, false, "Airline should have been removed from array");
-  // });
+      let res3 = await flightSuretyData.getRegisteredAirlines.call({from: flightSuretyApp.address });
+
+      console.log('Registered airlines array PRE removal:', res2);
+      console.log('Registered airlines array POST removal:', res3);
+
+      assert.equal(res2.length, 5, "The airline addresses werent pushed to the array");
+      assert.equal(res3.length, 4, "The airline addresses werent pushed to the array");
+      assert.equal(res1, true, "Should be a registered airline pre removal");
+      
+  });
 
 });

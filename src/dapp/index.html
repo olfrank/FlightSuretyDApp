@@ -143,15 +143,15 @@
                             their details below (Address and Name)
                         </p>
                         Address Of Airline 
-                        <input type="text" id="newAirlineAdd" placeholder="0x7A1a2e6368ef2..." value="" size="50" >
+                        <input class ="width-25" type="text" id="newAirlineAdd" placeholder="0x7A1a2e6368ef2..." value="" size="50" >
                         Name Of Airline
-                        <input type="text" id="newAirlineName" placeholder="EasyFly Airways" value="" size="50">
+                        <input class ="width-15" type="text" id="newAirlineName" placeholder="EasyFly Airways" value="" size="50">
                         
                         <button type="button" class="btnA btn-registerAirline" data-id="0">Register Airline</button>
 
                         <!-- <div class="divider"></div> -->
                         <hr class = "airlineHR">
-                        <h3>STEP 2 - Multi-party Consensus </h3>
+                        <h3>STEP 2 - Approve Airlines </h3>
                         <p class = "mt-10">
                             Here you can approve an airline (Registered) or check on the progress of your registration (Non-Registered). 
                             If your airline is the fifth or above airline to register then you must 
@@ -159,13 +159,13 @@
                         </p>
 
                         <label>APPROVE: Input the airline address you wish to approve:</label>
-                        <input type="text" id="approveAdd" value="" size="50" placeholder="0x7A1a2e6368ef2...">
+                        <input class ="width-25" type="text" id="approveAdd" value="" size="50" placeholder="0x7A1a2e6368ef2...">
                         <button type="button" class="btnA btn-approve" data-id="1" >Approve</button>
                         <br>
                         <label>VOTES: Input your airline address:</label>
-                        <input type="text" id="votesAdd" value="" size="50" placeholder="0x7A1a2e6368ef2...">
+                        <input class ="width-25" type="text" id="votesAdd" value="" size="50" placeholder="0x7A1a2e6368ef2...">
                         <button type="button" class="btnA btn-votes" data-id="2" >Check Votes</button>
-                        <input type="number" id="votesRes" disabled="true" name="votes"value="0">
+                        <input class = "width-5" type="number" id="votesRes" disabled="true" name="votes"value="0">
 
                         
                         
@@ -177,7 +177,7 @@
                             To complete the registration process (after your airline has been voted in) 
                             you must fund your airline (5 ether)
                         </p>
-                        <input type="number" id="fundAirline" value="5">ETH
+                        <input class = "width-5" type="number" id="fundAirline" value="5">ETH
                         <button type="button" class="btnA btn-fundAirline" data-id="3">Fund Airline</button>
 
                         
@@ -222,10 +222,10 @@
                             A converter can be found <a class = "unix" href="https://www.unixtimestamp.com/">here</a>
                         </p>
                         <label>Flight Number</label>
-                        <input type="text" id="newFlightNumber" placeholder="LT3345">
+                        <input class ="width-15" type="text" id="newFlightNumber" placeholder="LT3345">
                         <br><br>
                         <label>Flight Time</label>
-                        <input type="text" id="newFlightTime" placeholder="1642002554"> unix timestamp 
+                        <input class ="width-15" type="text" id="newFlightTime" placeholder="1642002554"> unix timestamp 
                         <br><br>
                         <button type="button" class="btnF regFlightBtn" data-id="5">Register Flight</button>
 
@@ -336,7 +336,7 @@
                         <hr>
                         <br>
                         <label>App Contract Address</label>
-                        <input id="appAddress1" type="text" placeholder="0x7A1a2e6368ef2..." value="" disabled="true">
+                        <input class ="width-25" id="appAddress1" type="text" placeholder="0x7A1a2e6368ef2..." value="" disabled="true">
                         <button class = "btnCC appCaBtn" type="button" data-id="10">Get App Contract Address</button>
                         <br><br>
 
@@ -374,7 +374,7 @@
                         <br><br><br>
 
                         <label>Authorise App Contract Address</label>
-                        <input id="newAppAddress" type="text" placeholder="0x3B2b4e6325ef6..." value="">
+                        <input class ="width-25" id="newAppAddress" type="text" placeholder="0x3B2b4e6325ef6..." value="">
                         <button class = "btnCC authAppCA" type="button" data-id="15">Authorise App Contract to Data Contract</button>
                         
                     </div>

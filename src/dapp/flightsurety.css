@@ -599,7 +599,7 @@ input{
 :root {
     --card-height: 50vw;
     --card-margin: 6vw;
-    --card-top-offset: 2em;
+    --card-top-offset: 1em;
     --numcards: 5;
     --outline-width: 0px;
     --animate-delay: 0.5s;
@@ -873,3 +873,13 @@ input{
     border: solid;
   }
   
+  .width-25{
+    width: 25%;
+  }
+  .width-5{
+    width: 5%;
+    margin-right: 0.5%;
+  }
+  .width-15{
+    width:15%;
+  }

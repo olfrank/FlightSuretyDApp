@@ -546,15 +546,18 @@ var App = {
               );
             };
         }
-
-        App.contracts.FlightSuretyData.deployed().then(function(instance) {
-        instance.events.allEvents(function(err, log){
-          if (!err)
-            App.handleEvents(log);
-        });
-        }).catch(function(err) {
+        
+        try{
+            App.contracts.FlightSuretyData.deployed().then(function(instance) {
+                instance.events.allEvents(function(err, log){
+                    if (!err){
+                        App.handleEvents(log);
+                    }
+                });
+            })
+        }catch(err) {
           console.log("ERROR @ fetchEventsData: " + err.message);
-        });
+        };
         
     },
 
@@ -566,15 +569,17 @@ var App = {
               );
             };
         }
-
-        App.contracts.FlightSuretyApp.deployed().then(function(instance) {
-        instance.events.allEvents(function(err, log){
-          if (!err)
-            App.handleEvents(log);
-        });
-        }).catch(function(err) {
+        try{
+            App.contracts.FlightSuretyApp.deployed().then(function(instance) {
+                instance.events.allEvents((err, log)=>{
+                  if (!err){
+                    App.handleEvents(log);
+                  } 
+                });
+            })
+        }catch(err) {
           console.log("ERROR @ fetchEventsApp: " + err.message);
-        });
+        };
         
     },
 

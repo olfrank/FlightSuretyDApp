@@ -170,7 +170,7 @@ contract FlightSuretyData {
         emit OperationalStatusChanged(mode);
     }
 
-    function operationalStatus() external view onlyOwner returns(bool){
+    function operationalStatus() external view returns(bool){
         return operational;
     }
 

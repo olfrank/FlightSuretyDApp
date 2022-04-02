@@ -189,12 +189,13 @@ var App = {
 
 
     getNumberRegisteredAirlines: async(event)=>{
-        event.preventDefault();
+        
         try{
+            event.preventDefault();
             const instance = await App.contracts.FlightSuretyData.deployed();
-            var numberOf = await instance.FlightSuretyData.getRegisteredAirlines.call({from: instance.address});
+            var numberOf = await instance.getRegisteredAirlines();
             console.log(numberOf.length)
-            $('#numAirlines').html(numberOf.length);
+            $('#numAirlines').text(numberOf.length);
 
         }catch(error){
             console.log(`Error @ getNumberRegisteredAirlines: ${error.message}`);
@@ -229,19 +230,21 @@ var App = {
     },
 
     fetchVotes: async(event)=>{
-        event.preventDefault();
+        
         try{
+            event.preventDefault();
             var airlineAdd = $('#votesAdd').val();
 
             const instance = await App.contracts.FlightSuretyData.deployed();
 
-            var numOfAirlines = await instance.getRegisteredAirlines({from: instance.address}).length;
-            console.log(numOfAirlines);
+            var numOfAirlines = await instance.getRegisteredAirlines();
+            console.log(numOfAirlines.length);
 
-            var numOfVotes = await instance.getApprovals(airlineAdd, {from: instance.address});
+            var numOfVotes = await instance.getApprovals(airlineAdd);
             console.log(numOfVotes);
 
-            $('#votesRes').val(`${numOfAirlines}/${numOfVotes}`);
+            var res = `${numOfVotes}/${numOfAirlines}`
+            $('#votesRes').val(res);
 
             console.log("Successful fetchVotes");
         }catch(error){
@@ -393,7 +396,9 @@ var App = {
             let flightKey = $('#oraclesFlights option:selected').val();
             let instance = await App.contracts.FlightSuretyData.deployed();
             if(flightKey){
+                await instance.fetchFlightStatus(flightKey);
                 let res = await instance.getFlightDetails(flightKey, {from: App.metamaskAccountId});
+
                 $('#flightStatus-oracles').val(res[3]);
             }else{
                 alert("Must select a valid flight");
@@ -538,7 +543,7 @@ var App = {
 
 
 
-    fetchEventsData: function () {
+    fetchEventsData: async () =>{
         if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
             App.contracts.FlightSuretyData.currentProvider.sendAsync = function () {
                 return App.contracts.FlightSuretyData.currentProvider.send.apply(
@@ -548,20 +553,19 @@ var App = {
         }
         
         try{
-            App.contracts.FlightSuretyData.deployed().then(function(instance) {
-                instance.events.allEvents(function(err, log){
+            const instance = await App.contracts.FlightSuretyData.deployed()
+                instance.allEvents(function(err, log){
                     if (!err){
                         App.handleEvents(log);
                     }
                 });
-            })
         }catch(err) {
           console.log("ERROR @ fetchEventsData: " + err.message);
         };
         
     },
 
-    fetchEventsApp: function () {
+    fetchEventsApp: async () =>{
         if (typeof App.contracts.FlightSuretyApp.currentProvider.sendAsync !== "function") {
             App.contracts.FlightSuretyApp.currentProvider.sendAsync = function () {
                 return App.contracts.FlightSuretyApp.currentProvider.send.apply(
@@ -570,13 +574,12 @@ var App = {
             };
         }
         try{
-            App.contracts.FlightSuretyApp.deployed().then(function(instance) {
-                instance.events.allEvents((err, log)=>{
+            const instance = await App.contracts.FlightSuretyApp.deployed()
+                instance.allEvents((err, log)=>{
                   if (!err){
                     App.handleEvents(log);
-                  } 
+                  }
                 });
-            })
         }catch(err) {
           console.log("ERROR @ fetchEventsApp: " + err.message);
         };

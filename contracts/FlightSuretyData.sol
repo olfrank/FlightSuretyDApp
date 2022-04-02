@@ -84,7 +84,7 @@ contract FlightSuretyData {
 
     
      
-    mapping(address => uint256) private approvals; // to account for all the approvals on a register request
+    mapping(address => uint256) public approvals; // to account for all the approvals on a register request
 
            //approver  =>  approvee => true/false
     mapping(address => mapping(address => bool)) private hasApproved;

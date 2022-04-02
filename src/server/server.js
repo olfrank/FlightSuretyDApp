@@ -1,16 +1,16 @@
 const FlightSuretyApp = require('../../build/contracts/FlightSuretyApp.json')
-const FlightSuretyData = require('../../build/contracts/FlightSuretyData.json')
+// const FlightSuretyData = require('../../build/contracts/FlightSuretyData.json')
 const Config = require('./config.json');
 const Web3 = require('web3');
 const express = require('express');
-// const { ValidationError } = require('webpack');
 
 
 var config = Config['localhost'];
 var web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
+// var web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws').replace('localhost', '127.0.0.1')));
 web3.eth.defaultAccount = web3.eth.accounts[0];
 var appInstance = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
-// var dataInstance = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
+
 
 var oracles = new Map();
 var accounts = [];
@@ -20,17 +20,15 @@ const registerOracles = async()=> {
 
   try{
     accounts = await getAllAccounts();
-    var numOfOracles = 40;
+    var numOfOracles = 10;
 
-    for(let i = 9; i < numOfOracles; i++){
-      oracles.push(accounts[i]);
-      console.log(accounts[i]);
+    for(let i = 2; i < numOfOracles; i++){
 
       await registerAllOracles(accounts[i]);
       let indexes = await getAllIndexes(accounts[i]);
       oracles.set(accounts[i], indexes);
 
-      console.log(`Oracles no: ${i - 9} @ ${accounts[i]} has indexes: ${indexes}`)
+      console.log(`Oracles no: ${i - 2} @ ${accounts[i]} has indexes: ${indexes}`)
     }
   }catch(err){
     console.log("Error @ registerOracles: ", err.message);
@@ -56,7 +54,7 @@ const getAllAccounts = () => {
 const registerAllOracles = (address) =>{
   return new Promise(async(resolve, reject) => {
     let fee = web3.utils.toWei('1', 'ether')
-    await appInstance.methods.registerOracle.send( {from: address, value: fee, gas: 999999999}, (err, res)=>{
+     await appInstance.methods.registerOracle().send( {from: address, value: fee, gas: 6000000}, (err, res)=>{
       if(err){
         console.log("Error @ registerAllOracles: ", err.message);
         reject(err);
@@ -70,7 +68,7 @@ const registerAllOracles = (address) =>{
 
 const getAllIndexes = (address) =>{
   return new Promise(async(resolve, reject)=>{
-    await appInstance.getMyIndexes.call( {from: address, gas: 999999999}, (err, res)=>{
+    await appInstance.methods.getMyIndexes().call( {from: address, gas: 6000000}, (err, res)=>{
       if(err){
         console.log("Error @ getAllIndexes: ", err.message);
         reject(err);
@@ -104,10 +102,10 @@ const submitAllResponses = async(event) =>{
 
 
 
-const submitOracleResponses = async(oracleAdd, indexes, airline,flightNumber, timestamp)=> {
+const submitOracleResponses = (oracleAdd, indexes, airline,flightNumber, timestamp)=> {
   console.log("Submit Oracle Response has Started");
 
-  return new Promise((resolve, reject)=>{
+  return new Promise(async(resolve, reject)=>{
     let statusCode = getStatusCode();
     console.log(`Oracles Address: ${oracleAdd}, responds with flight status code: ${statusCode}`);
 
@@ -189,21 +187,3 @@ registerOracles();
 module.export = { 
   app
 }
-
-
-
-
-  // const getIndexes = async(address)=> {
-  //   return new Promise(async(resolve, reject)=>{
-  //     console.log("get Indexes has Started");
-  //     await appInstance.getMyIndexes.call( {from: address, gas: 999999999} ).then((err, res)=>{
-  //       if(err){
-  //         console.log(`Error @ getIndexes from address: ${address}. ${err.message}`);
-  //         reject(err);
-  //       }else{
-  //         console.log(res);
-  //         resolve(res)
-  //       }
-  //     });
-  //   });
-  // } 

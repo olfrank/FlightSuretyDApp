@@ -20,15 +20,15 @@ const registerOracles = async()=> {
 
   try{
     accounts = await getAllAccounts();
-    var numOfOracles = 10;
+    var numOfOracles = 15;
 
-    for(let i = 2; i < numOfOracles; i++){
+    for(let i = 6; i < numOfOracles; i++){
 
       await registerAllOracles(accounts[i]);
       let indexes = await getAllIndexes(accounts[i]);
       oracles.set(accounts[i], indexes);
 
-      console.log(`Oracles no: ${i - 2} @ ${accounts[i]} has indexes: ${indexes}`)
+      console.log(`Oracles no: ${i - 6} @ ${accounts[i]} has indexes: ${indexes}`)
     }
   }catch(err){
     console.log("Error @ registerOracles: ", err.message);
@@ -83,7 +83,7 @@ const getAllIndexes = (address) =>{
 
 
 const submitAllResponses = async(event) =>{
-  var oracleIndex = getOraclesByIndex(event.returnValues.index);
+  var oracleIndex = findOracles(event.returnValues.index);
   oracleIndex.forEach(async(address)=>{
     try{
       await submitOracleResponses(
@@ -100,6 +100,19 @@ const submitAllResponses = async(event) =>{
   })
 }
 
+const findOracles = (idx) =>{
+  let found = [];
+  for(let [address, indexes] of oracles){
+    indexes.forEach(index=>{
+      if(index === idx){
+        found.push(address);
+        console.log(idx + '==>' + address);
+      }
+    })
+  }
+  return found;
+}
+
 
 
 const submitOracleResponses = (oracleAdd, indexes, airline,flightNumber, timestamp)=> {
@@ -111,7 +124,7 @@ const submitOracleResponses = (oracleAdd, indexes, airline,flightNumber, timesta
 
     await appInstance.methods.submitOracleResponse(
       indexes, airline, flightNumber, timestamp, statusCode
-    ).send({from: oracles[k], gas: 999999999}, (err, res)=>{
+    ).send({from: oracleAdd, gas: 6000000}, (err, res)=>{
       if(err){
         console.log("Error @ submitOraclesResponses: ", err.message);
         reject(err);

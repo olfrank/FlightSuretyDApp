@@ -70,23 +70,19 @@ var App = {
     },
 
     handleChange: async(event)=>{
-        if(event.target.id == "availableFlights"){
+        if(event.target.id === "availableFlights"){
             return await App.getInsuranceFlightDetails();
-        }else if(event.target.id == "oraclesFlights"){
+        }else if(event.target.id === "oraclesFlights"){
             return await App.getWithdrawFlightDetails();
         }
     },
 
     getInsuranceFlightDetails: async(event)=>{
-        // var element = $('#availableFlights');
-        // var flightKey = element.options[element.selectedIndex].value;
-        let _flightKey = $('#availableFlights option:selected').val();
-        let passenger = App.metamaskAccountId;
             try{
-                
+                let _flightKey = $('#availableFlights option:selected').val();
                 const dataContract = await App.contracts.FlightSuretyData.deployed();
                 
-                let flightDetails = await dataContract.getFlightDetails(_flightKey,{from: passenger});
+                let flightDetails = await dataContract.getFlightDetails(_flightKey,{from: App.metamaskAccountId});
                 
 
                 if(flightDetails){
@@ -107,14 +103,12 @@ var App = {
     },
 
     getWithdrawFlightDetails: async(event)=>{
-        App.getMetamaskAccountID();
-        var flightKey = $('#oraclesFlights option:selected').val();
-        console.log(`flightKey: ${flightKey}`);
-        var passenger = App.metamaskAccountId;
         try{
+            var flightKey = $('#oraclesFlights option:selected').val();
+            console.log(`flightKey: ${flightKey}`);
             const dataContract = await App.contracts.FlightSuretyData.deployed();
             let flightDetails = await dataContract.getFlightDetails(flightKey);
-            let creditAmount = await dataContract.getWithdrawAmount(flightKey, {from: passenger});
+            let creditAmount = await dataContract.getWithdrawAmount(flightKey, {from: App.metamaskAccountId});
             let amount = web3.utils.fromWei(creditAmount, 'ether');
             console.log(creditAmount);
 
@@ -298,7 +292,7 @@ var App = {
 
             let flightKey = await instance.getFlightKey(airline, flightNumber, flightTime, {from: airline});
 
-            App.flightKeys.push(flightKey);
+            // App.flightKeys.push(flightKey);
 
             alert_msg("Flight has been successfully registered", 'success');
 
@@ -395,10 +389,11 @@ var App = {
         try{
             let flightKey = $('#oraclesFlights option:selected').val();
             let instance = await App.contracts.FlightSuretyData.deployed();
+            let instanceApp = await App.contracts.FlightSuretyApp.deployed();
             if(flightKey){
-                await instance.fetchFlightStatus(flightKey);
+                await instanceApp.fetchFlightStatus(flightKey, {from: App.metamaskAccountId});
                 let res = await instance.getFlightDetails(flightKey, {from: App.metamaskAccountId});
-
+                console.log(res[3]);
                 $('#flightStatus-oracles').val(res[3]);
             }else{
                 alert("Must select a valid flight");

@@ -192,7 +192,7 @@ var App = {
         event.preventDefault();
         try{
             const instance = await App.contracts.FlightSuretyData.deployed();
-            var numberOf = await instance.FlightSuretyData.getRegisteredAirlines({from: instance.address});
+            var numberOf = await instance.FlightSuretyData.getRegisteredAirlines.call({from: instance.address});
             console.log(numberOf.length)
             $('#numAirlines').html(numberOf.length);
 

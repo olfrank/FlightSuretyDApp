@@ -230,6 +230,7 @@ contract FlightSuretyData {
         string memory airlineName = airlines[msg.sender].name;
         bytes memory _airlineName = bytes(airlineName);
 
+        require(airlines[msg.sender].fundedAmount == 0, "You have already funded your airline");
         require(_airlineName.length != 0, "You must request to be registered first");
         require(msg.sender.balance >= msg.value, "Not enough ether to fund");
         require(msg.value >= AIRLINE_REG_FEE, "Insufficient amount, The registration fee is 5 ether");
@@ -431,15 +432,13 @@ contract FlightSuretyData {
                                    external 
                                    view 
                                    requireIsOperational 
-                                   onlyAuthorisedCallers 
                                    returns(address[] memory _airlines){
 
         return registeredAirlines;
     }
 
-    function getNumberOfRegAirlines() external view requireIsOperational 
-                                   onlyAuthorisedCallers 
-                                   returns(uint256 numberOf){
+    function getNumberOfRegAirlines() external view requireIsOperational  
+                                      returns(uint256 numberOf){
         return registeredAirlines.length;
     }
 
@@ -447,7 +446,6 @@ contract FlightSuretyData {
                           external 
                           view 
                           requireIsOperational 
-                          onlyAuthorisedCallers 
                           returns(uint256 numOfApprovals){
 
         return approvals[airlineAdd];
@@ -457,8 +455,7 @@ contract FlightSuretyData {
     function hasApprovedAirline(address approver, address airlineAdd) 
                                 external 
                                 view 
-                                requireIsOperational 
-                                onlyAuthorisedCallers 
+                                requireIsOperational  
                                 returns(bool){
 
         return hasApproved[approver][airlineAdd];

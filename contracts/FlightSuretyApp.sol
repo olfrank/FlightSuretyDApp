@@ -123,7 +123,7 @@ contract FlightSuretyApp {
         require(_airlineName.length != 0, "must be a valid airline name");
         require(airlineAdd != address(0), "must be a valid address");
         
-        uint256 numOfAirlines = flightSuretyData.getRegisteredAirlines().length;
+        uint256 numOfAirlines = flightSuretyData.getNumberOfRegAirlines();
 
         if(numOfAirlines >= 4){
             uint256 _approvals = flightSuretyData.getApprovals(airlineAdd);
@@ -354,7 +354,9 @@ interface IFlightSuretyData {
 
     function registerAirline(string memory airlineName, address airlineToAdd) external ;
 
-    function getRegisteredAirlines() external view returns(address[] memory airlines);
+    function getRegisteredAirlines() external view returns(address[] memory _airlines);
+
+    function getNumberOfRegAirlines() external view returns(uint256 numberOf);
 
     function getApprovals(address airlineAdd) external view returns(uint256 numOfApprovals);
 

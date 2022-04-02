@@ -31,7 +31,7 @@ module.exports = async(deployer, accounts) =>{
     await deployer.deploy(FlightSuretyApp, FlightSuretyData.address)
     let config = {
                     localhost: {
-                        url: 'http://localhost:9545',
+                        url: 'http://localhost:8000',
                         dataAddress: FlightSuretyData.address,
                         appAddress: FlightSuretyApp.address
                     }

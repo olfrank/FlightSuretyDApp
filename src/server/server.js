@@ -12,84 +12,106 @@ web3.eth.defaultAccount = web3.eth.accounts[0];
 var appInstance = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
 // var dataInstance = new web3.eth.Contract(FlightSuretyData.abi, config.dataAddress);
 
-var oracles = [];
+var oracles = new Map();
 var accounts = [];
 
-  var registerOracles = async()=> {
-    console.log("Register Oracles has Started");
+const registerOracles = async()=> {
+  console.log("Register Oracles has Started");
+  try{
+    accounts = await getAllAccounts();
+    var numOfOracles = 40;
+    console.log(accounts);
+    // const fee = await appInstance.methods.REGISTRATION_FEE().call();
     
-    web3.eth.getAccounts().then((result, error)=>{
-      if(error){
-        console.log(error.message)
+
+    for(let i = 9; i < numOfOracles; i++){
+      oracles.push(accounts[i]);
+      console.log(accounts[i]);
+      await registerAllOracles(accounts[i]);
+      let indexes = await getAllIndexes(accounts[i]);
+      oracles.set(accounts[i], indexes);
+      console.log(`Oracles no: ${i - 9} @ ${accounts[i]} has indexes: ${indexes}`)
+    }
+  }catch(err){
+    console.log("Error @ registerOracles: ", err.message)
+  }
+} 
+
+const getAllAccounts = () => {
+  return new Promise((resolve, reject) => {
+      web3.eth.getAccounts((err, res) => {
+          if (err) {
+              console.error('Error encountered while getting accounts', err.message);
+              reject(err);
+          } else {
+            resolve(res);
+          }
+      });        
+  });        
+};
+
+const registerAllOracles = (address) =>{
+  return new Promise((resolve, reject) => {
+    let fee = web3.utils.toWei('1', 'ether')
+    appInstance.methods.registerOracle.send( {from: address, value: fee, gas: 999999999}, (err, res)=>{
+      if(err){
+        console.log("Error @ registerAllOracles: ", err.message);
+        reject(err);
       }else{
-        accounts = result;
+        resolve(res);
       }
     });
-      
-    var numOfOracles = 30;
-    console.log(accounts);
+  });
+};
 
-    if(numOfOracles > accounts.length){
-      numOfOracles = accounts.length;
-
-    }else{
-      // const fee = await appInstance.methods.REGISTRATION_FEE().call();
-      let fee = web3.utils.toWei('1', 'ether')
-
-      for(let i = 0; i < numOfOracles; i++){
-        oracles.push(accounts[i]);
-        console.log(accounts[i]);
-        await appInstance.methods.registerOracle().send( {from: accounts[i], value: fee, gas: 999999999} );
+const getAllIndexes = (address) =>{
+  return new Promise(async(resolve, reject)=>{
+    appInstance.getMyIndexes.call( {from: address, gas: 999999999}, (err, res)=>{
+      if(err){
+        console.log("Error @ getAllIndexes: ", err.message);
+        reject(err)
+      }else{
+        resolve(res);
       }
-    }
-  } 
+    })
+  })
+}
 
 
-  var getIndexes = async(address)=> {
-    return new Promise(async(resolve, reject)=>{
-      console.log("get Indexes has Started");
-      await appInstance.getMyIndexes().call( {from: address, gas: 999999999} ).then((err, res)=>{
+
+
+  const submitAllResponses = async(event) =>{
+    var oracleIndex = getOraclesByIndex(event.returnValues.index);
+    oracleIndex.forEach(async(address)=>{
+      try{
+        await submitOracleResponses(address, event.returnValues.index, event.returnValues.airline, event.returnValues.flight, event.returnValues.timestamp)
+      }catch(err){
+        console.log("Error @ submitAllResponses: ", err.message);
+      }
+    })
+  }
+
+  const submitOracleResponses = async(oracleAdd, indexes, airline,flightNumber, timestamp)=> {
+    console.log("Submit Oracle Response has Started");
+
+
+    return new Promise((resolve, reject)=>{
+      let statusCode = getStatusCode();
+      console.log(`Oracles Address: ${oracleAdd}, responds with flight status code: ${statusCode}`);
+      await appInstance.methods.submitOracleResponse(
+        indexes, airline, flightNumber, timestamp, statusCode
+      ).send({from: oracles[k], gas: 999999999}, (err, res)=>{
         if(err){
-          console.log(`Error @ getIndexes from address: ${address}. ${err.message}`);
+          console.log("Error @ submitOraclesResponses: ", err.message);
           reject(err);
         }else{
-          console.log(res);
-          resolve(res)
+          resolve(res);
         }
-      });
-    });
+      })
+    })
   } 
 
-  var submitOracleResponses = async(airline, flightNumber, timestamp)=> {
-    console.log("Submit Orcle Response has Started");
-    for(let i = 0; i < oracles.length; i++){
-      var indexes = getIndexes(oracles[i]);
-      var statusCode = getStatusCode();
-
-      for(let k = 0; k < indexes.length; k++){
-
-        try{
-          await appInstance.methods.submitOracleResponse(
-            indexes[k], airline, flightNumber, timestamp, statusCode
-          ).send({from: oracles[k], gas: 999999999})
-
-        }catch(err){
-
-          console.log(`
-            Error @ submitOracleRespnoses: ${err.message}. 
-            Args: 
-            indexes = ${indexes},
-            airline = ${airline}, 
-            flightNumber = ${flightNumber}, 
-            timestamp = ${timestamp},
-            statusCode = ${statusCode}
-         `);
-        }
-      }
-    }
-  } 
-
-  var getStatusCode = ()=> {
+  const getStatusCode = ()=> {
     return Math.round((Math.random()*(50 - 0)+ 0)/10)*10;
   } 
   
@@ -98,7 +120,7 @@ var accounts = [];
     if (error) {
       console.log(error)
     }else{
-      submitOracleResponses(event);
+      submitAllResponses(event);
       console.log(event);
     }
   });
@@ -119,7 +141,7 @@ var accounts = [];
   })
 
 
-  appInstance.events.FlightStatusInfo({fromBlock: 0 }, function(error, event){
+  appInstance.events.FlightStatusInfo({fromBlock: 0 }, (error, event)=>{
     if(error){
       console.log(error);
     }else{
@@ -139,7 +161,7 @@ var accounts = [];
 const app = express();
 app.get('/api', (req, res) => {
     res.send({
-      message: 'An API for use with your Dapp!'
+      message: 'API for DApp'
     })
 })
 registerOracles();
@@ -151,3 +173,17 @@ module.export = {
 
 
 
+  // const getIndexes = async(address)=> {
+  //   return new Promise(async(resolve, reject)=>{
+  //     console.log("get Indexes has Started");
+  //     await appInstance.getMyIndexes.call( {from: address, gas: 999999999} ).then((err, res)=>{
+  //       if(err){
+  //         console.log(`Error @ getIndexes from address: ${address}. ${err.message}`);
+  //         reject(err);
+  //       }else{
+  //         console.log(res);
+  //         resolve(res)
+  //       }
+  //     });
+  //   });
+  // } 

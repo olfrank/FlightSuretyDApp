@@ -119,7 +119,6 @@ var App = {
                 $('#flightStatus-oracles').val(flightDetails[3]);
                 $('#toCredit').val(amount);
             }else{
-                $('#flightStatus-oracles').val(20);
                 console.log(`Error: Unable to fetch flight and credit details for ${flightKey}`)
             }
             console.log('successful');
@@ -552,7 +551,7 @@ var App = {
         
         try{
             const instance = await App.contracts.FlightSuretyData.deployed()
-                instance.events.allEvents(function(err, log){
+                instance.events.allEvents({fromBlock: lastest }, function(err, log){
                     if (!err){
                         App.handleEvent(log);
                     }
@@ -573,7 +572,7 @@ var App = {
         }
         try{
             const instance = await App.contracts.FlightSuretyApp.deployed()
-            instance.events.allEvents((err, log)=>{
+            instance.events.allEvents({fromBlock: 0 },(err, log)=>{
                   if (!err){
                     App.handleEvent(log);
                   }

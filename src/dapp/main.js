@@ -110,7 +110,7 @@ var App = {
             let flightDetails = await dataContract.getFlightDetails(flightKey);
             let creditAmount = await dataContract.getWithdrawAmount(flightKey, {from: App.metamaskAccountId});
             let amount = web3.utils.fromWei(creditAmount, 'ether');
-            console.log(creditAmount);
+            console.log(amount);
 
             if(flightDetails){
                 $('#airlineAdd-oracles').val(flightDetails[1]);
@@ -119,6 +119,7 @@ var App = {
                 $('#flightStatus-oracles').val(flightDetails[3]);
                 $('#toCredit').val(amount);
             }else{
+                $('#flightStatus-oracles').val(20);
                 console.log(`Error: Unable to fetch flight and credit details for ${flightKey}`)
             }
             console.log('successful');
@@ -384,16 +385,18 @@ var App = {
 
 
     getFlightStatus: async(event)=>{
-        event.preventDefault();
-
         try{
+            event.preventDefault();
             let flightKey = $('#oraclesFlights option:selected').val();
             let instance = await App.contracts.FlightSuretyData.deployed();
             let instanceApp = await App.contracts.FlightSuretyApp.deployed();
             if(flightKey){
                 await instanceApp.fetchFlightStatus(flightKey, {from: App.metamaskAccountId});
                 let res = await instance.getFlightDetails(flightKey, {from: App.metamaskAccountId});
-                console.log(res[3]);
+                console.log("flightStatus = ", res[3]);
+                console.log("FlightNumber = ", res[0])
+                console.log("AirlineAdd = ", res[1])
+                console.log("Timestamp = ", res[2])
                 $('#flightStatus-oracles').val(res[3]);
             }else{
                 alert("Must select a valid flight");
@@ -404,10 +407,10 @@ var App = {
     },
 
     withdraw: async(event)=>{
-        event.preventDefault();
-        let flightKey = $('#availableFlights option:selected').val();
-        
+
         try{
+            event.preventDefault();
+            let flightKey = $('#oraclesFlights option:selected').val();
             let instance = App.contracts.FlightSuretyData.deployed();
             if(flightKey){
                 let withdrawAmount = web3.utils.toWei($('#toWithdraw').val(), 'ether');
@@ -549,9 +552,9 @@ var App = {
         
         try{
             const instance = await App.contracts.FlightSuretyData.deployed()
-                instance.allEvents(function(err, log){
+                instance.events.allEvents(function(err, log){
                     if (!err){
-                        App.handleEvents(log);
+                        App.handleEvent(log);
                     }
                 });
         }catch(err) {
@@ -570,9 +573,9 @@ var App = {
         }
         try{
             const instance = await App.contracts.FlightSuretyApp.deployed()
-                instance.allEvents((err, log)=>{
+            instance.events.allEvents((err, log)=>{
                   if (!err){
-                    App.handleEvents(log);
+                    App.handleEvent(log);
                   }
                 });
         }catch(err) {
@@ -582,7 +585,7 @@ var App = {
     },
 
 
-    handleEvents: (log)=>{
+    handleEvent: (log)=>{
         let logEvent = '';
 
         switch(log.event){
@@ -650,7 +653,7 @@ var App = {
                                             Timestamp = ${log.args.timestamp}`
                 break;
         }
-
+        console.log(logEvent);
         $("#tx-events").append('<li>' + logEvent + '</li>');
     }
 

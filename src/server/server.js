@@ -106,7 +106,7 @@ const findOracles = (idx) =>{
     indexes.forEach(index=>{
       if(index === idx){
         found.push(address);
-        console.log(idx + '==>' + address);
+        console.log(idx + ' ==> ' + address);
       }
     })
   }
@@ -118,11 +118,12 @@ const findOracles = (idx) =>{
 const submitOracleResponses = (oracleAdd, indexes, airline,flightNumber, timestamp)=> {
   console.log("Submit Oracle Response has Started");
 
-  return new Promise(async(resolve, reject)=>{
+  return new Promise((resolve, reject)=>{
     let statusCode = getStatusCode();
     console.log(`Oracles Address: ${oracleAdd}, responds with flight status code: ${statusCode}`);
+    console.log("SUBMIT RESPONSES for: " + indexes, airline, flightNumber, timestamp, statusCode);
 
-    await appInstance.methods.submitOracleResponse(
+    appInstance.methods.submitOracleResponse(
       indexes, airline, flightNumber, timestamp, statusCode
     ).send({from: oracleAdd, gas: 6000000}, (err, res)=>{
       if(err){
@@ -150,7 +151,7 @@ appInstance.events.OracleRequest({fromBlock: 0}, function (err, event) {
 
   }else{
     submitAllResponses(event);
-    console.log(event);
+    console.log("OracleRequest Event: ", event);
   }
 });
 

@@ -217,7 +217,7 @@ contract FlightSuretyApp {
     uint256 public constant REGISTRATION_FEE = 1 ether;
 
     // Number of oracles that must respond for valid status
-    uint256 private constant MIN_RESPONSES = 3;
+    uint256 private constant MIN_RESPONSES = 1;
 
 
     struct Oracle {
@@ -286,7 +286,7 @@ contract FlightSuretyApp {
     function submitOracleResponse(uint8 index, address airline, string memory flightNumber, uint256 timestamp, uint8 statusCode) external{
         require((oracles[msg.sender].indexes[0] == index) || (oracles[msg.sender].indexes[1] == index) || (oracles[msg.sender].indexes[2] == index), "Index does not match oracle request");
 
-        bytes32 key = keccak256(abi.encodePacked(index, airline, flightNumber, timestamp)); 
+        bytes32 key = keccak256(abi.encodePacked(airline, flightNumber, timestamp)); 
         require(oracleResponses[key].isOpen, "Flight or timestamp do not match oracle request");
     
         responsesResults[key][statusCode].push(msg.sender);

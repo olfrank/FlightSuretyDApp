@@ -238,7 +238,7 @@ var App = {
             var numOfVotes = await instance.getApprovals(airlineAdd);
             console.log(numOfVotes);
 
-            var res = `${numOfVotes}/${numOfAirlines}`
+            var res = `${Number(numOfVotes)}/${numOfAirlines.length}`
             $('#votesRes').val(res);
 
             console.log("Successful fetchVotes");

@@ -556,9 +556,9 @@ var App = {
         
         try{
             const instance = await App.contracts.FlightSuretyData.deployed()
-                instance.events.allEvents({fromBlock: 0, toBlock: 'latest' }, (err, log)=>{
+                instance.allEvents((err, log)=>{
                     if (!err){
-                        console.log(log);
+                        console.log(log.event);
                         App.handleEvent(log);
                     }
                 });
@@ -577,10 +577,10 @@ var App = {
             };
         }
         try{
-            const instance = await App.contracts.FlightSuretyApp.deployed()
-            instance.events.allEvents({fromBlock: 0, toBlock: 'latest'},(err, log)=>{
+            const instance = await App.contracts.FlightSuretyApp.deployed();
+            instance.allEvents((err, log)=>{
                   if (!err){
-                    console.log(log);
+                    console.log(log.event);
                     App.handleEvent(log);
                   }
                 });

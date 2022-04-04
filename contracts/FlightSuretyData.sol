@@ -351,6 +351,7 @@ contract FlightSuretyData {
     }
 
 
+
    
     function creditInsurees(bytes32 key) external onlyAuthorisedCallers requireIsOperational{
         // add claim amount to insurance struct 
@@ -500,10 +501,10 @@ contract FlightSuretyData {
         
         for(uint256 i = 0; i < insure.length; i++){
             if(msg.sender == insure[i].passenger){
-                return insure[i].claimAmount;
+                amount = insure[i].claimAmount;
             }
         }
-        return 0;
+        return amount;
     }
 
 

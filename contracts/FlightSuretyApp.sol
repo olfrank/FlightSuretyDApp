@@ -169,13 +169,15 @@ contract FlightSuretyApp {
    
     function processFlightStatus(address airline, string memory flightNumber, uint256 timestamp, uint8 statusCode) internal {
         bytes32 key = getFlightKey(airline, flightNumber, timestamp);
-        ( , , ,uint8 code, ) = flightSuretyData.getFlightDetails(key);
+        // ( , , ,uint8 code, ) = flightSuretyData.getFlightDetails(key);
 
-        if(code == 20){
+        flightSuretyData.updateFlightStatus(key, statusCode);
+        
+        if(statusCode == STATUS_CODE_LATE_AIRLINE){
             flightSuretyData.creditInsurees(key);
-        }else{
-            flightSuretyData.updateFlightStatus(key, statusCode);
         }
+
+        // oracleResponses[key].isOpen = false;
     }
 
     function fetchFlightStatus(bytes32 key) external {
@@ -192,9 +194,9 @@ contract FlightSuretyApp {
         bytes32 key = getFlightKey(airline, flightNumber, timestamp);
 
         oracleResponses[key]  = ResponseInfo({
-                                                requester: msg.sender,
-                                                isOpen: true
-                                            });
+            requester: msg.sender,
+            isOpen: true
+            });
 
         emit OracleRequest(index, airline, flightNumber, timestamp);
     } 
@@ -231,8 +233,7 @@ contract FlightSuretyApp {
     // Model for responses from oracles
     struct ResponseInfo {
         address requester;                              // Account that requested status
-        bool isOpen;                                    // If open, oracle responses are accepted
-                                                        
+        bool isOpen;                                    // If open, oracle responses are accepted                            
     }
 
     // Track all oracle responses
@@ -291,8 +292,9 @@ contract FlightSuretyApp {
     
         responsesResults[key][statusCode].push(msg.sender);
 
+        // uin8 code = findMajority(key)
+
         // Information isn't considered verified until at least MIN_RESPONSES
-        // oracles respond with the *** same *** information
         emit OracleReport(airline, flightNumber, timestamp, statusCode);
         if (responsesResults[key][statusCode].length >= MIN_RESPONSES) {
 

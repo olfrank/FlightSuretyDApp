@@ -89,7 +89,7 @@ var App = {
                     $('#airlineAdd').val(flightDetails[1]);
                     $('#flightNumber').val(flightDetails[0]);
                     $('#flightTime').val(flightDetails[2]);
-                    $('#flightStatus').val(flightDetails[3]);
+                    $('#flightStatus').val(Number(flightDetails[3]));
                     
 
                 }else{
@@ -104,6 +104,7 @@ var App = {
 
     getWithdrawFlightDetails: async(event)=>{
         try{
+            
             var flightKey = $('#oraclesFlights option:selected').val();
             console.log(`flightKey: ${flightKey}`);
             const dataContract = await App.contracts.FlightSuretyData.deployed();
@@ -116,7 +117,7 @@ var App = {
                 $('#airlineAdd-oracles').val(flightDetails[1]);
                 $('#flightNumber-oracles').val(flightDetails[0]);
                 $('#flightTime-oracles').val(flightDetails[2]);
-                $('#flightStatus-oracles').val(flightDetails[3]);
+                $('#flightStatus-oracles').val(Number(flightDetails[3]));
                 $('#toCredit').val(amount);
             }else{
                 console.log(`Error: Unable to fetch flight and credit details for ${flightKey}`)
@@ -305,8 +306,9 @@ var App = {
     },
 
     purchaseInsurance: async(event)=>{
-        event.preventDefault();
+        
         try{
+            event.preventDefault();
             const instance = await App.contracts.FlightSuretyData.deployed();
 
             let flightKey = $('#availableFlights option:selected').val();
@@ -392,11 +394,14 @@ var App = {
             if(flightKey){
                 await instanceApp.fetchFlightStatus(flightKey, {from: App.metamaskAccountId});
                 let res = await instance.getFlightDetails(flightKey, {from: App.metamaskAccountId});
-                console.log("flightStatus = ", res[3]);
+                let amount = await instance.getWithdrawAmount(flightKey, {from: App.metamaskAccountId});
+                console.log("flightStatus = ", Number(res[3]));
                 console.log("FlightNumber = ", res[0])
                 console.log("AirlineAdd = ", res[1])
-                console.log("Timestamp = ", res[2])
-                $('#flightStatus-oracles').val(res[3]);
+                console.log("Timestamp = ", Number(res[2]))
+                $("#toCredit").val(web2.utils.fromWei(amount, 'ether'));
+                $('#flightStatus-oracles').val(Number(res[3]));
+
             }else{
                 alert("Must select a valid flight");
             }
@@ -551,8 +556,9 @@ var App = {
         
         try{
             const instance = await App.contracts.FlightSuretyData.deployed()
-                instance.events.allEvents({fromBlock: lastest }, function(err, log){
+                instance.events.allEvents({fromBlock: 0, toBlock: 'latest' }, (err, log)=>{
                     if (!err){
+                        console.log(log);
                         App.handleEvent(log);
                     }
                 });
@@ -572,8 +578,9 @@ var App = {
         }
         try{
             const instance = await App.contracts.FlightSuretyApp.deployed()
-            instance.events.allEvents({fromBlock: 0 },(err, log)=>{
+            instance.events.allEvents({fromBlock: 0, toBlock: 'latest'},(err, log)=>{
                   if (!err){
+                    console.log(log);
                     App.handleEvent(log);
                   }
                 });

@@ -20,7 +20,7 @@ const registerOracles = async()=> {
 
   try{
     accounts = await getAllAccounts();
-    var numOfOracles = 15;
+    var numOfOracles = 17;
 
     for(let i = 6; i < numOfOracles; i++){
 
@@ -115,7 +115,7 @@ const findOracles = (idx) =>{
 
 
 
-const submitOracleResponses = (oracleAdd, indexes, airline,flightNumber, timestamp)=> {
+const submitOracleResponses = (oracleAdd, indexes, airline, flightNumber, timestamp)=> {
   console.log("Submit Oracle Response has Started");
 
   return new Promise((resolve, reject)=>{
@@ -173,7 +173,7 @@ appInstance.events.OracleReport({fromBlock: 0 }, function(err, event){
 
 
 
-appInstance.events.FlightStatusInfo({fromBlock: 0 }, (err, event)=>{
+appInstance.events.FlightStatusInfo({fromBlock: 0 }, function(err, event){
   if(err){
     console.log("Error @ FlightStatusInfo event ", err.message);
   }else{

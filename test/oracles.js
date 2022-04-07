@@ -6,7 +6,7 @@ var BigNumber = require('bignumber.js');
 
 contract('Oracles', async (accounts) => {
 
-  const TEST_ORACLES_COUNT = 9;
+  const TEST_ORACLES_COUNT = 30;
   var flightSuretyApp;
   var flightSuretyData; 
   var owner;
@@ -23,6 +23,8 @@ contract('Oracles', async (accounts) => {
     user1 = accounts[1];
     user2 = accounts[2];
 
+    firstAirlineName = "firstAirline"
+
     // Watch contract events
     const STATUS_CODE_UNKNOWN = 0;
     const STATUS_CODE_ON_TIME = 10;
@@ -32,8 +34,11 @@ contract('Oracles', async (accounts) => {
     const STATUS_CODE_LATE_OTHER = 50;
     fee = web3.utils.toWei('5', 'ether');
 
-    await flightSuretyData.fundAirline({from: firstAirline, value: fee});
     await flightSuretyData.authoriseCaller(flightSuretyApp.address, {from: owner});
+
+    await flightSuretyApp.registerAirline(firstAirlineName, firstAirline, {from: firstAirline});
+    await flightSuretyData.fundAirline({from: firstAirline, value: fee});
+    
   });
 
 
@@ -44,7 +49,7 @@ contract('Oracles', async (accounts) => {
     let fee = web3.utils.toWei('2', 'ether');
     
     // ACT
-    for(let a = 1; a < TEST_ORACLES_COUNT; a++) {      
+    for(let a = 15; a < TEST_ORACLES_COUNT; a++) {      
       await flightSuretyApp.registerOracle({ from: accounts[a], value: fee });
       let result = await flightSuretyApp.getMyIndexes.call({from: accounts[a]});
       console.log(`Oracle Registered: ${result[0]}, ${result[1]}, ${result[2]}`);
@@ -54,8 +59,8 @@ contract('Oracles', async (accounts) => {
   it('can request flight status', async () => {
     
     // ARRANGE
-    airlineAdd = accounts[2];
-    airlineName = "BA"
+    airlineAdd = accounts[3];
+    airlineName = "BA";
     let airlineFee = web3.utils.toWei('5', 'ether');
     await flightSuretyApp.registerAirline(airlineName, airlineAdd, {from: airlineAdd});
     await flightSuretyData.fundAirline({from: airlineAdd, value: airlineFee});
@@ -74,7 +79,7 @@ contract('Oracles', async (accounts) => {
     // loop through all the accounts and for each account, all its Indexes
     // and submit a response. The contract will reject a submission if it was
     // not requested so while sub-optimal, it's a good test of that feature
-    for(let a = 1; a < TEST_ORACLES_COUNT; a++) {
+    for(let a = 15; a < TEST_ORACLES_COUNT; a++) {
 
       // Get oracle information
       let oracleIndexes = await flightSuretyApp.getMyIndexes.call({ from: accounts[a]});

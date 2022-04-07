@@ -54,25 +54,25 @@ contract FlightSuretyApp {
     // requires the operational status to be true
     modifier isOperational() {
          // Modify to call data contract's status
-        require(operational, "Contract is currently not operational");  
+        require(operational, "FSA: Contract is not operational");  
         _;  
     }
 
     // requires the "ContractOwner" account to be the function caller
     modifier onlyOwner(){
-        require(msg.sender == contractOwner, "Caller is not contract owner");
+        require(msg.sender == contractOwner, "FSA: Caller not contract owner");
         _;
     }
 
     modifier onlyRegisteredAirlines(){
         (bool isRegistered,, ) = flightSuretyData.getAirlineDetails(msg.sender);
-        require(isRegistered, "you must be a registered airline to enter this function");
+        require(isRegistered, "FSA: Must be a registered airline");
         _;
     }
 
     modifier onlyNonRegisteredAirlines(){
         (bool isRegistered,, ) = flightSuretyData.getAirlineDetails(msg.sender);
-        require(!isRegistered, "you must be a non-registered airline to enter this function");
+        require(!isRegistered, "FSA: Must be a non-registered airline");
         _;
     }
 
@@ -120,8 +120,8 @@ contract FlightSuretyApp {
         
         bytes memory _airlineName = bytes(airlineName);
 
-        require(_airlineName.length != 0, "must be a valid airline name");
-        require(airlineAdd != address(0), "must be a valid address");
+        require(_airlineName.length != 0, "FSA: airline name Must be valid");
+        require(airlineAdd != address(0), "FSA: Must be a valid address");
         
         uint256 numOfAirlines = flightSuretyData.getNumberOfRegAirlines();
 
@@ -137,8 +137,7 @@ contract FlightSuretyApp {
             }else{
                 success = false;
                 votes = _approvals;
-                require(success, "Not enough approvals to register flight");
-                //revert("Not enough approvals to register flight");
+                require(success, "FSA: Not enough approvals to register flight");
             }
 
         }else{
@@ -152,7 +151,7 @@ contract FlightSuretyApp {
 
     function approveAirline(address airline) external isOperational onlyRegisteredAirlines{
         bool has = flightSuretyData.hasApprovedAirline(msg.sender, airline);
-        require(!has, "You have already approved this airline");
+        require(!has, "FSA: You have already approved this airline");
 
         flightSuretyData.approveAirline(msg.sender, airline);
     }
@@ -258,7 +257,7 @@ contract FlightSuretyApp {
     // Register an oracle with the contract
     function registerOracle() external payable{
         // Require registration fee
-        require(msg.value >= REGISTRATION_FEE, "Registration fee is required to register");
+        require(msg.value >= REGISTRATION_FEE, "FSA: Registration fee is required to register");
 
         uint8[3] memory indexes = generateIndexes(msg.sender);
 
@@ -272,7 +271,7 @@ contract FlightSuretyApp {
 
 
     function getMyIndexes() view external returns(uint8[3] memory ){
-        require(oracles[msg.sender].isRegistered, "Not registered as an oracle");
+        require(oracles[msg.sender].isRegistered, "FSA: Oracle NOT registered");
 
         return oracles[msg.sender].indexes;
     }
@@ -288,7 +287,7 @@ contract FlightSuretyApp {
         require((oracles[msg.sender].indexes[0] == index) || (oracles[msg.sender].indexes[1] == index) || (oracles[msg.sender].indexes[2] == index), "Index does not match oracle request");
 
         bytes32 key = keccak256(abi.encodePacked(airline, flightNumber, timestamp)); 
-        require(oracleResponses[key].isOpen, "Flight or timestamp do not match oracle request");
+        require(oracleResponses[key].isOpen, "FSA: Flight || Timestamp do not match oracle request");
     
         responsesResults[key][statusCode].push(msg.sender);
 

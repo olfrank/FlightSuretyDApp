@@ -126,30 +126,30 @@ contract FlightSuretyData {
     /********************************************************************************************/
 
     modifier requireIsOperational() {
-        require(operational, "Contract is currently not operational");
+        require(operational, "FSD: Contract is not operational");
         _;  
     }
 
     modifier onlyOwner(){
-        require(msg.sender == contractOwner, "Caller is not contract owner");
+        require(msg.sender == contractOwner, "FSD: Caller is not contract owner");
         _;
     }
 
     modifier onlyRegisteredAirlines(){
         bool isRegistered = airlines[msg.sender].isRegistered;
-        require(isRegistered, "you must be a registered airline to enter this function");
+        require(isRegistered, "FSD: Must be a registered airline");
         _;
     }
 
     modifier onlyNonRegisteredAirlines(){
         bool isRegistered = airlines[msg.sender].isRegistered;
-        require(!isRegistered, "you must be a non-registered airline to enter this function");
+        require(!isRegistered, "FSD: Must be a non-registered airline");
         _;
     }
 
     modifier onlyAuthorisedCallers(){
         bool isAuthorised = authorisedCallers[msg.sender];
-        require(isAuthorised, "Caller is not authorised to enter this function" );
+        require(isAuthorised, "FSD: Caller is not authorised" );
         _;
     }
 
@@ -175,7 +175,7 @@ contract FlightSuretyData {
     }
 
     function authoriseCaller(address contractAdd) external onlyOwner{
-        require(contractAdd != address(0), "must be a valid address");
+        require(contractAdd != address(0), "FSD: Must be valid address");
         authorisedCallers[contractAdd] = true;
         emit CallerAuthorised(contractAdd);
     }
@@ -230,10 +230,10 @@ contract FlightSuretyData {
         string memory airlineName = airlines[msg.sender].name;
         bytes memory _airlineName = bytes(airlineName);
 
-        require(airlines[msg.sender].fundedAmount == 0, "You have already funded your airline");
-        require(_airlineName.length != 0, "You must request to be registered first");
-        require(msg.sender.balance >= msg.value, "Not enough ether to fund");
-        require(msg.value >= AIRLINE_REG_FEE, "Insufficient amount, The registration fee is 5 ether");
+        require(airlines[msg.sender].fundedAmount == 0, "FSD: Already funded airline");
+        require(_airlineName.length != 0, "FSD: Must request to be registered first");
+        require(msg.sender.balance >= msg.value, "FSD: Not enough ETH to fund");
+        require(msg.value >= AIRLINE_REG_FEE, "FSD: Insufficient amount, reg fee = 5 ETH");
 
         uint256 amount = msg.value;
         string memory name = airlines[msg.sender].name;
@@ -249,7 +249,7 @@ contract FlightSuretyData {
 
     function renounceAirline() external payable requireIsOperational onlyRegisteredAirlines returns(bool success){
         // an airline can renounce themselves but must pay an exit fee of 1 ether.
-        require(msg.value >= AIRLINE_RENOUNCE_FEE, "Insufficient value, must be >= 1 ether");
+        require(msg.value >= AIRLINE_RENOUNCE_FEE, "FSD: Insufficient amount, must be >= 1 ether");
         
         // will remove the airline from the registeredAirlines[]
 
@@ -262,7 +262,7 @@ contract FlightSuretyData {
             emit AirlineRenounced(airlineToRemove);
 
         }else{
-            revert("Your airline registration could not be renounced");
+            revert("FSD: Could not remove airline registration");
         }
 
         return success;
@@ -284,7 +284,7 @@ contract FlightSuretyData {
             }
             
             if(i == registeredAirlines.length && airlineAdd != registeredAirlines[i]){
-                revert("Airline address not found in registerAirlines array");
+                revert("FSD: Airline address not found");
             }
         }
 
@@ -335,13 +335,14 @@ contract FlightSuretyData {
     // ********************** region: INSURANCE MANAGEMENT **********************
   
     function buyInsurance(bytes32 key) external payable requireIsOperational{
-        require(msg.value <= MAX_INSURANCE_COVER, "Max insurance cover is 1 ether");
+        require(msg.value <= MAX_INSURANCE_COVER, "FSD: Max insurance cover = 1 ETH");
+        require(flights[key].statusCode == 0, "FSD: Flight already recieved status");
         
         Insurance[] storage insure = insuree[key];
 
         for(uint i = 0; i < insure.length; i++){
             if(insure[i].passenger == msg.sender){
-                revert("you (passenger) have already bought insurance for this flight");
+                revert("FSD: Passenger has already insured this flight");
             }else{
                 string memory flightNumber = flights[key].flightNumber;
                 insure.push(Insurance(msg.sender, msg.value, 0));
@@ -364,15 +365,15 @@ contract FlightSuretyData {
     
 
     function withdraw(bytes32 key, uint256 amountToWithdraw) external payable requireIsOperational returns(bool success){
-        require(amountToWithdraw > 0, "You must enter a valid amount to withdraw");
+        require(amountToWithdraw > 0, "FSD: Enter valid withdraw amount");
 
         Insurance[] storage insure = insuree[key];
 
         for(uint256 i = 0; i < insure.length; i ++){
             if(msg.sender == insure[i].passenger){
 
-                require(amountToWithdraw < insure[i].claimAmount, "Value must be lower than claim amount");
-                require(address(this).balance >= amountToWithdraw, "The contract has an insufficient balance");//checks
+                require(amountToWithdraw < insure[i].claimAmount, "FSD: Value must be < claim amount");
+                require(address(this).balance >= amountToWithdraw, "FSD: Contract has insufficient balance");//checks
 
                 address passenger = insure[i].passenger;
                 insure[i].claimAmount -= amountToWithdraw; //effects
@@ -488,7 +489,7 @@ contract FlightSuretyData {
                 insuredAmount = _insurance[i].insuredAmount;
                 claimAmount = _insurance[i].claimAmount;
             }else{
-                revert("Could not find passenger in argument dependent lookup in Insurance[]");
+                revert("FSD: Could not find passenger in Insurance[]");
             }
         }
 

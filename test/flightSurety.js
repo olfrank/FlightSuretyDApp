@@ -36,6 +36,7 @@ contract('Flight Surety Tests', async (accounts) => {
     flightSuretyApp = await  FlightSuretyApp.deployed();
     flightSuretyData =  await FlightSuretyData.deployed();
     owner = accounts[0];
+    firstAirlineName = "firstAirline"
     firstAirline = accounts[9];
 
     ryanairAdd = accounts[3];
@@ -59,12 +60,14 @@ contract('Flight Surety Tests', async (accounts) => {
     fee = web3.utils.toWei('5', 'ether');
     renounceFee = web3.utils.toWei('1', 'ether');
 
+    await flightSuretyData.authoriseCaller(flightSuretyApp.address, {from: owner});
 
+    await flightSuretyApp.registerAirline(firstAirlineName, firstAirline, {from: firstAirline});
     await flightSuretyData.fundAirline({from: firstAirline, value: fee}); //1st registered airline 
 
     
 
-    await flightSuretyData.authoriseCaller(flightSuretyApp.address, {from: owner});
+    
 
     
     
@@ -118,7 +121,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
       await truffleAssert.reverts(
           flightSuretyData.isAuthorisedCaller(flightSuretyApp.address),
-          "Contract is currently not operational"
+          "FSD: Contract is not operational"
           )
 
       // Set it back for other tests to work
@@ -179,7 +182,7 @@ contract('Flight Surety Tests', async (accounts) => {
     //register & fund BA - approval needed
     await truffleAssert.reverts(
         flightSuretyApp.registerAirline(britishName, britishAdd, {from: britishAdd}),
-        "Not enough approvals to register flight"
+        "FSA: Not enough approvals to register flight"
     );
 
     assert.equal(res1, true, "Airline should be added to the register airlines array post funding");
@@ -225,7 +228,7 @@ contract('Flight Surety Tests', async (accounts) => {
 
     await truffleAssert.reverts(
         flightSuretyApp.approveAirline(australianAdd, {from: virginAdd}),
-        "You have already approved this airline"
+        "FSA: You have already approved this airline"
     );
   })
 

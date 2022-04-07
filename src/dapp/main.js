@@ -114,9 +114,11 @@ var App = {
             console.log(amount);
 
             if(flightDetails){
+                var dateTime = timeConverter(flightDetails[2]);
+
                 $('#airlineAdd-oracles').val(flightDetails[1]);
                 $('#flightNumber-oracles').val(flightDetails[0]);
-                $('#flightTime-oracles').val(flightDetails[2]);
+                $('#flightTime-oracles').val(dateTime);
                 $('#flightStatus-oracles').val(Number(flightDetails[3]));
                 $('#toCredit').val(amount);
             }else{
@@ -128,6 +130,21 @@ var App = {
             console.log(`Unable to fetch flight details and credit amount for ${flightKey}, reson given: ${error.message}`);
         }
     },
+
+    timeConverter: (timestamp)=>{
+        var a = new Date(timestamp * 1000);
+        var months = ['January','February','March','April','May','June','July','August',
+                      'September','October','November','December'];
+
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        var time = `${date} ${month} ${year} ${hour}:${min}`
+        return time;
+      },
 
     handleButtonClick: async(event)=>{
         event.preventDefault();
@@ -287,11 +304,26 @@ var App = {
             const instance = await App.contracts.FlightSuretyApp.deployed();
 
             var flightNumber = $('#newFlightNumber').val();
-            var flightTime = $('#newFlightTime').val();
+            
+            var dateM = $('#newFlightTimeMonth').val();
+            var dateD = $('#newFlightTimeDay').val();
+            var dateY = $('#newFlightTimeYear').val();
 
-            await instance.registerFlight(flightNumber, flightTime, {from: airline});
+            var timeH = $('#newFlightTimeHour').val();
+            var timeM = $('#newFlightTimeMin').val();
 
-            let flightKey = await instance.getFlightKey(airline, flightNumber, flightTime, {from: airline});
+            var timestamp = toTimestamp(`${dateM}/${dateD}/${dateY} ${timeH}:${timeM}:00`)
+            console.log(timestamp);
+            
+            function toTimestamp(str){
+                var date = Date.parse(str);
+                return date/1000;
+            }
+            
+
+            await instance.registerFlight(flightNumber, timestamp, {from: airline});
+
+            let flightKey = await instance.getFlightKey(airline, flightNumber, timestamp, {from: airline});
 
             // App.flightKeys.push(flightKey);
 
@@ -545,6 +577,29 @@ var App = {
 
 
 
+    // fetchEventsData: async () =>{
+    //     if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
+    //         App.contracts.FlightSuretyData.currentProvider.sendAsync = function () {
+    //             return App.contracts.FlightSuretyData.currentProvider.send.apply(
+    //             App.contracts.FlightSuretyData.currentProvider, arguments
+    //           );
+    //         };
+    //     }
+        
+    //     try{
+    //         const instance = await App.contracts.FlightSuretyData.deployed()
+    //             instance.allEvents((err, log)=>{
+    //                 if (!err){
+    //                     console.log(log.event);
+    //                     App.handleEvent(log);
+    //                 }
+    //             });
+    //     }catch(err) {
+    //       console.log("ERROR @ fetchEventsData: " + err.message);
+    //     };
+        
+    // },
+
     fetchEventsData: async () =>{
         if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
             App.contracts.FlightSuretyData.currentProvider.sendAsync = function () {
@@ -556,9 +611,10 @@ var App = {
         
         try{
             const instance = await App.contracts.FlightSuretyData.deployed()
-                instance.allEvents((err, log)=>{
+                instance.events.allEvents((err, log)=>{
                     if (!err){
-                        console.log(log.event);
+                        console.log("log.event = ", log.event);
+                        console.log("log = ", log);
                         App.handleEvent(log);
                     }
                 });
@@ -567,6 +623,28 @@ var App = {
         };
         
     },
+
+    // fetchEventsApp: async () =>{
+    //     if (typeof App.contracts.FlightSuretyApp.currentProvider.sendAsync !== "function") {
+    //         App.contracts.FlightSuretyApp.currentProvider.sendAsync = function () {
+    //             return App.contracts.FlightSuretyApp.currentProvider.send.apply(
+    //             App.contracts.FlightSuretyApp.currentProvider, arguments
+    //           );
+    //         };
+    //     }
+    //     try{
+    //         const instance = await App.contracts.FlightSuretyApp.deployed();
+    //         instance.allEvents((err, log)=>{
+    //               if (!err){
+    //                 console.log(log.event);
+    //                 App.handleEvent(log);
+    //               }
+    //             });
+    //     }catch(err) {
+    //       console.log("ERROR @ fetchEventsApp: " + err.message);
+    //     };
+        
+    // },
 
     fetchEventsApp: async () =>{
         if (typeof App.contracts.FlightSuretyApp.currentProvider.sendAsync !== "function") {
@@ -578,9 +656,11 @@ var App = {
         }
         try{
             const instance = await App.contracts.FlightSuretyApp.deployed();
-            instance.allEvents((err, log)=>{
+            instance.events.allEvents((err, log)=>{
                   if (!err){
-                    console.log(log.event);
+                    console.log("log.event = ", log.event);
+                    console.log("log = ", log);
+
                     App.handleEvent(log);
                   }
                 });

@@ -220,14 +220,18 @@
                             Once you are a registered with us at FlightSurety (above steps) you may 
                             register insurable flights for your passengers. 
                             <br> <br>
-                            <u>PLEASE NOTE: </u>you must enter unix timestamp format in the Flight Time field. 
-                            A converter can be found <a class = "unix" href="https://www.unixtimestamp.com/">here</a>
                         </p>
                         <label>Flight Number</label>
                         <input class ="width-15" type="text" id="newFlightNumber" placeholder="LT3345">
                         <br><br>
-                        <label>Flight Time</label>
-                        <input class ="width-15" type="text" id="newFlightTime" placeholder="1642002554"> unix timestamp 
+                        <label>Flight Date:</label>
+                        <input class ="width-5" type="text" id="newFlightDateMonth" placeholder="MM">
+                        <input class ="width-5" type="text" id="newFlightDateDay" placeholder="DD">
+                        <input class ="width-5" type="text" id="newFlightDateYear" placeholder="YYYY">
+                        <br><br>
+                        <label>Flight Time (24 hour):</label>
+                        <input class ="width-5" type="text" id="newFlightTimeHour" placeholder="HH">
+                        <input class ="width-5" type="text" id="newFlightTimeMin" placeholder="MM">GMT+0100 (British Summer Time)
                         <br><br>
                         <button type="button" class="btnF regFlightBtn" data-id="5">Register Flight</button>
 

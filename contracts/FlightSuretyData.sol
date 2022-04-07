@@ -358,7 +358,7 @@ contract FlightSuretyData {
         // add claim amount to insurance struct 
         Insurance[] storage insure = insuree[key];
         for(uint256 i = 0; i < insure.length; i++){
-            insure[i].claimAmount = (insure[i].insuredAmount *3) / 2;
+            insure[i].claimAmount = (insure[i].insuredAmount * 3) / 2;
         }
     }
 
@@ -369,6 +369,8 @@ contract FlightSuretyData {
 
         Insurance[] storage insure = insuree[key];
 
+        success = false;
+        
         for(uint256 i = 0; i < insure.length; i ++){
             if(msg.sender == insure[i].passenger){
 
@@ -379,8 +381,6 @@ contract FlightSuretyData {
                 insure[i].claimAmount -= amountToWithdraw; //effects
                 payable(passenger).transfer(amountToWithdraw);//interaction
                 success = true;
-            }else{
-                success = false;
             }
         }
         return success;

@@ -197,8 +197,18 @@ var App = {
                 return await App.authoriseAppToDataContract(event);
             case 16:
                 return await App.getNumberRegisteredAirlines(event);
+            case 17:
+                return App.removeModal(event);
+            case 18:
+                return await App.deauthoriseAppToDataContract(event);
         }
 
+    },
+
+
+    removeModal: (event)=>{
+        event.preventDefault;
+        $("#alertModal").addClass("hidden");
     },
 
 
@@ -224,9 +234,32 @@ var App = {
             var airlineAdd = $('#newAirlineAdd').val();
             var airlineName = $('#newAirlineName').val();
             await instance.registerAirline(airlineName, airlineAdd, {from: App.metamaskAccountId});
+
+            let output = `
+                AIRLINE REGISTERED:
+                Airline Name: ${airlineName}
+                Airline Address: ${airlineAdd}
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('success');
+            $("#alertMsg").text(output);
+
+
             console.log('successfully added to registration queue')
 
         }catch(error){
+
+            let output = `
+                AIRLINE WAS NOT ABLE TO BE REGISTERED:
+                Possible Reasons: 1. You Inputed your airline address incorrectly
+                                  2. You Inputed your airline name incorrectly
+                                  3. There are more than 4 airlines already registered which means you must be voted.
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('failure');
+            $("#alertMsg").text(output);
             console.log(`Error @ registerAirline: ${error.message}`);
         };
     },
@@ -238,7 +271,24 @@ var App = {
             var instance = await App.contracts.FlightSuretyApp.deployed();
             await instance.approveAirline(approveAdd, {from: App.metamaskAccountId});
 
+            let output = `
+                AIRLINE APPROVAL SUCCESSFUL:
+                Airline Address To Approve: ${approveAdd}
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('success');
+            $("#alertMsg").text(output);
+
         }catch(error){
+            let output = `
+                AIRLINE APPROVAL UNSUCCESSFUL:
+                Possible Reason: You inputted the wrong address.
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('failure');
+            $("#alertMsg").text(output);
             console.log(`Error @ approveVotes: ${error.message}`)
         }
     },
@@ -278,9 +328,32 @@ var App = {
             var amount = web3.utils.toWei($('#fundAirline').val(), 'ether');
             await instance.fundAirline({from: App.metamaskAccountId, value: amount});
             console.log('successful funding of airline');
-            alert_msg("Your airline has been successfully funded with: " + web3.utils.fromWei(amount) + "ETH", 'success');
+            
+
+            let output = `
+                AIRLINE SUCCESSFULLY FUNDED:
+                Airline Address: ${App.metamaskAccountId}
+                Amount: ${web3.utils.fromWei(amount, 'ether')} ETH
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('success');
+            $("#alertMsg").text(output);
+
+
+
         }catch(error){
-            alert_msg("Unfortunately your transaction did not go through, check you have enough ether and try again", 'danger');
+
+            let output = `
+                AIRLINE COULD NOT BE FUNDED:
+                Possible Reason: 
+                1. You inputted a value less that 5 ETH
+                2. You dont have enough ETH to fulfil the transaction 
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('failure');
+            $("#alertMsg").text(output);
             console.log(`Error @ fundAirline: ${error.message}`);
         }
     },
@@ -291,22 +364,42 @@ var App = {
             const instance = await App.contracts.FlightSuretyData.deployed();
             var fee = web3.utils.toWei("1", 'ether');
             await instance.renounceAirline({from: App.metamaskAccountId, value: fee});
+
+            let output = `
+                AIRLINE SUCCESSFULLY RENOUNCED:
+                Airline Address: ${App.metamaskAccountId}
+                Amount: ${web3.utils.fromWei(amount, 'ether')} ETH
+            `
+
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('success');
+            $("#alertMsg").text(output);
+
             console.log('airline successfully removed');
-            alert_msg("Your airline has now been removed from FlightSurety, sorry to see you go :(", 'success');
+
         }catch(error){
-            alert_msg(
-                "Your airline was not able to be removed, make sure wallet address you are using is the same as the airline address", 
-                'danger');
+
+            let output = `
+                AIRLINE COULD NOT BE RENOUNCED:
+
+                Possible Reasons: 
+
+                1. You may not be a registered airline.
+
+                2. You may not have enough ETH to initiate your removal.
+            `
+            $("#alertModal").removeClass('hidden');
+            $("#alertModal").addClass('failure');
+            $("#alertMsg").text(output);
 
             console.log(`Error @ renounceAirline: ${error.message}`);
         }
     },
 
     registerFlight: async(event)=>{
-        event.preventDefault();
-        var airline = App.metamaskAccountId;
-
         try{
+            event.preventDefault();
+            var airline = App.metamaskAccountId;
             const instance = await App.contracts.FlightSuretyApp.deployed();
 
             var flightNumber = $('#newFlightNumber').val();
@@ -327,6 +420,7 @@ var App = {
                 var date = Date.parse(str);
                 return date/1000;
             }
+
             let current = Date.now()/1000
             console.log("current: ", current);
             // 1670811720
@@ -335,10 +429,32 @@ var App = {
 
             if(timestamp > current){
                 await instance.registerFlight(flightNumber, timestamp, {from: airline});
-                let flightKey = await instance.getFlightKey(airline, flightNumber, timestamp, {from: airline});
-                alert("Flight has been successfully registered");
+                // let flightKey = await instance.getFlightKey(airline, flightNumber, timestamp, {from: airline});
+                let output = `
+                    FLIGHT SUCCESSFULLY REGISTERED:
+
+                    Flight Number: ${flightNumber}
+
+                    Airline Address: ${airline}
+
+                    Timestamp: ${timestamp}
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('success');
+                $("#alertMsg").text(output);
+
                 console.log('flight successfully added');
             }else{
+                let output = `
+                    FLIGHT REGISTRATION UNSUCCESSFULL:
+
+                    You cannot register a flight in the past.
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('failure');
+                $("#alertMsg").text(output);
                 alert("You cannot register a flight in the past!")
             }
             
@@ -346,7 +462,21 @@ var App = {
             
 
         }catch(error){
-            alert_msg("Flight was not able to be registered", 'danger');
+
+            let output = `
+                    FLIGHT REGISTRATION UNSUCCESSFULL:
+
+                    Possible Reasons:
+
+                    1. The flight number has already been taken
+                    2. The date of the flight is in the past
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('failure');
+                $("#alertMsg").text(output);
+                alert("You cannot register a flight in the past!");
+
             console.log(`Error @ registerFlight: ${error.message}`);
         }
     },
@@ -373,15 +503,36 @@ var App = {
 
             if(timestamp > current && flightKey && amount){
                 await instance.buyInsurance(flightKey,{from: App.metamaskAccountId, value: amount});
-                console.log('insurance successfully bought');
-            }else{
-                alert("You cannot buy insurance for a flight in the past || amount must be specified");
+                let output = `
+                    INSURANCE SUCCESSFULLY PURCHASED:
+
+                    Flight Number: ${$("#flightNumber").val()}
+
+                    Amount Insured: ${insureAmount} ETH
+
+                    Timestamp: ${timestamp}
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('success');
+                $("#alertMsg").text(output);
             }
 
-            
-
         }catch(error){
-            alert_msg("Your Insurance Purchase Was Unsuccessful", 'danger');
+            let output = `
+                    INSURANCE UNSUCCESSFULLY PURCHASED:
+                    
+                    Possible Reasons:
+
+                    1. You cannot purchase insurance for a flight in the past.
+
+                    2. You must specifify an amount less than 1 ETH.
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('failure');
+                $("#alertMsg").text(output);
+
             console.log(`Error @ purchaseInsurance: ${error.message}`);
         }
     },
@@ -469,11 +620,34 @@ var App = {
             if(flightKey){
                 let withdrawAmount = web3.utils.toWei($('#toWithdraw').val(), 'ether');
                 await instance.withdraw(flightKey, withdrawAmount, {from: App.metamaskAccountId});
-            }else{
-                alert("Must select a valid flight");
+
+                let output = `
+                    SUCCESSFULLY WITHDREW YOUR CLAIM:
+
+                    Amount: ${$('#toWithdraw').val()} ETH
+
+                    Your Address: ${App.metamaskAccountId}
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('success');
+                $("#alertMsg").text(output);
             }
 
         }catch(error){
+            let output = `
+                    WITHDRAW WAS UNSUCCESSFULLY:
+
+                    Possible Reasons:
+                    1. You did not specify an amount to withdraw
+                    2. The flight was delayed with status code that isnt 20 meaning 
+                       the it wasn't the airlines fault.
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('failure ');
+                $("#alertMsg").text(output);
+
             console.log(`Error @ withdraw: ${error.message}`);
         }
     },
@@ -573,23 +747,82 @@ var App = {
     },
 
     authoriseAppToDataContract: async(event)=>{
-        event.preventDefault();
-        // App.getMetamaskAccountID();
-        // var caller = App.metamaskAccountId;
+
         try{
+            event.preventDefault();
             let instance = await App.contracts.FlightSuretyData.deployed()
             let appAddress = $('#newAppAddress').val();
-            if(!appAddress){
-                alert("Please Enter A Valid Address")
-                alert_msg("Please Enter A Valid Address", 'danger');
-            }else{
+            if(appAddress){
+    
                 await instance.authoriseCaller(appAddress, {from: App.metamaskAccountId});
-                alert_msg("Successfully Authorised a Address: "+ appAddress, 'success');
+
+                let output = `
+                    CONTRACT ADDRESS HAS BEEN AUTHORISED:
+
+                    Contract Address: ${appAddress}
+
+                    Authorised By: ${App.metamaskAccountId}
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('success');
+                $("#alertMsg").text(output);
+     
                 console.log("Successfully Authorised a Address: "+ appAddress);
             }
 
         }catch(error){
+            let output = `
+                    CONTRACT ADDRESS COULD NOT BE AUTHORISED:
+
+                    Possible Reason: You did not input a valid ethereum address.
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('failure');
+                $("#alertMsg").text(output);
+
             console.log(`Error @ authoriseAppToDataContract: ${error.message}`);
+        }
+    },
+
+    deauthoriseAppToDataContract: async(event)=>{
+        
+        try{
+            event.preventDefault();
+            let instance = await App.contracts.FlightSuretyData.deployed()
+            let appAddress = $('#oldAppAddress').val();
+            if(appAddress){
+    
+                await instance.deauthoriseCaller(appAddress, {from: App.metamaskAccountId});
+
+                let output = `
+                    CONTRACT ADDRESS HAS BEEN DEAUTHORISED:
+
+                    Contract Address: ${appAddress}
+
+                    Authorised By: ${App.metamaskAccountId}
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('success');
+                $("#alertMsg").text(output);
+     
+                console.log("Successfully Authorised a Address: "+ appAddress);
+            }
+
+        }catch(error){
+            let output = `
+                    CONTRACT ADDRESS COULD NOT BE DEAUTHORISED:
+
+                    Possible Reason: You did not input a valid ethereum address.
+                `
+
+                $("#alertModal").removeClass('hidden');
+                $("#alertModal").addClass('failure');
+                $("#alertMsg").text(output);
+
+            console.log(`Error @ deauthoriseAppToDataContract: ${error.message}`);
         }
     },
 

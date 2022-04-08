@@ -886,3 +886,40 @@ input{
   .width-15{
     width:15%;
   }
+
+  .data-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 40%;
+    height: 50%;
+    margin: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.6em;
+    z-index: 1000;
+    transition: 0.3s;
+    box-shadow: 10px 12px 10px 5px black;
+  }
+  .hidden{
+    display: none;
+  }
+
+  .success{
+    color: rgb(25, 180, 25);
+  }
+
+  .failure{
+    color: red;
+  }
+
+  .deauthoriseAddr{
+    border: 2px solid red;
+    padding: 5px;
+    margin-top:5%;
+
+  }

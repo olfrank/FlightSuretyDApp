@@ -46,7 +46,7 @@
         
         </video>
 
-        <h1 >Welcome to FlightSurety Insurance!</h1>
+        <h1>Welcome to FlightSurety Insurance!</h1>
         <h2>The simple, safe and secure platform to make sure you're insured</h2>
 
         <img class = "mercury" src="./images/mercuryPixel.png" alt="">
@@ -189,8 +189,6 @@
                         <button class="btnA btn-renounce" type="button" data-id="4">Renounce your Airline</button>
                         <br><br>
 
-                        
-                        
                         
                     </div>
                     
@@ -384,7 +382,19 @@
                         <label>Authorise App Contract Address</label>
                         <input class ="width-25" id="newAppAddress" type="text" placeholder="0x3B2b4e6325ef6..." value="">
                         <button class = "btnCC authAppCA" type="button" data-id="15">Authorise App Contract to Data Contract</button>
+
+                        <div class ="deauthoriseAddr">
+                            <label>DEAUTHORISE App Contract Address</label>
+                            <input class ="width-25" id="oldAppAddress" type="text" placeholder="0x3B2b4e6325ef6..." value="">
+                            <button class = "btnCC deAuthAppCA" type="button" data-id="18">Authorise App Contract to Data Contract</button>
+                        </div>
                         
+
+                        <div class = "data-modal hidden" id="alertModal" data-id="17" style="white-space: pre-line">
+                            <p id="alertMsg" >
+            
+                            </p>
+                        </div>
                     </div>
                 
             </li>

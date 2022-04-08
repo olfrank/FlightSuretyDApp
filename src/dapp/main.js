@@ -817,30 +817,7 @@ var App = {
         }
     },
 
-
-
-    // fetchEventsData: async () =>{
-    //     if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
-    //         App.contracts.FlightSuretyData.currentProvider.sendAsync = function () {
-    //             return App.contracts.FlightSuretyData.currentProvider.send.apply(
-    //             App.contracts.FlightSuretyData.currentProvider, arguments
-    //           );
-    //         };
-    //     }
-        
-    //     try{
-    //         const instance = await App.contracts.FlightSuretyData.deployed()
-    //             instance.allEvents((err, log)=>{
-    //                 if (!err){
-    //                     console.log(log.event);
-    //                     App.handleEvent(log);
-    //                 }
-    //             });
-    //     }catch(err) {
-    //       console.log("ERROR @ fetchEventsData: " + err.message);
-    //     };
-        
-    // },
+    
 
     fetchEventsData: async () =>{
         if (typeof App.contracts.FlightSuretyData.currentProvider.sendAsync !== "function") {
@@ -866,27 +843,7 @@ var App = {
         
     },
 
-    // fetchEventsApp: async () =>{
-    //     if (typeof App.contracts.FlightSuretyApp.currentProvider.sendAsync !== "function") {
-    //         App.contracts.FlightSuretyApp.currentProvider.sendAsync = function () {
-    //             return App.contracts.FlightSuretyApp.currentProvider.send.apply(
-    //             App.contracts.FlightSuretyApp.currentProvider, arguments
-    //           );
-    //         };
-    //     }
-    //     try{
-    //         const instance = await App.contracts.FlightSuretyApp.deployed();
-    //         instance.allEvents((err, log)=>{
-    //               if (!err){
-    //                 console.log(log.event);
-    //                 App.handleEvent(log);
-    //               }
-    //             });
-    //     }catch(err) {
-    //       console.log("ERROR @ fetchEventsApp: " + err.message);
-    //     };
-        
-    // },
+    
 
     fetchEventsApp: async () =>{
         if (typeof App.contracts.FlightSuretyApp.currentProvider.sendAsync !== "function") {

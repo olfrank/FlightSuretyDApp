@@ -903,7 +903,7 @@ input{
     line-height: 1.6em;
     z-index: 1000;
     transition: 0.3s;
-    box-shadow: 10px 12px 10px 5px black;
+    box-shadow: 7px 8px 29px 5px black;
   }
   .hidden{
     display: none;

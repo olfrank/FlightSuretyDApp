@@ -236,12 +236,12 @@ var App = {
             await instance.registerAirline(airlineName, airlineAdd, {from: App.metamaskAccountId});
 
             let output = `
-                AIRLINE REGISTERED:
+                AIRLINE ADDED TO REGISTRATION QUEUE:
                 Airline Name: ${airlineName}
                 Airline Address: ${airlineAdd}
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden failure');
             $("#alertModal").addClass('success');
             $("#alertMsg").text(output);
 
@@ -252,12 +252,17 @@ var App = {
 
             let output = `
                 AIRLINE WAS NOT ABLE TO BE REGISTERED:
-                Possible Reasons: 1. You Inputed your airline address incorrectly
-                                  2. You Inputed your airline name incorrectly
-                                  3. There are more than 4 airlines already registered which means you must be voted.
+
+                Possible Reasons: 
+
+                1. Your airline ADDRESS was not specified
+                                  
+                2. Your airline NAME was not specified
+                                  
+                3. There are more than 4 airlines already registered which means you must be voted.
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden success');
             $("#alertModal").addClass('failure');
             $("#alertMsg").text(output);
             console.log(`Error @ registerAirline: ${error.message}`);
@@ -276,7 +281,7 @@ var App = {
                 Airline Address To Approve: ${approveAdd}
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden failure');
             $("#alertModal").addClass('success');
             $("#alertMsg").text(output);
 
@@ -286,7 +291,7 @@ var App = {
                 Possible Reason: You inputted the wrong address.
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden success');
             $("#alertModal").addClass('failure');
             $("#alertMsg").text(output);
             console.log(`Error @ approveVotes: ${error.message}`)
@@ -336,7 +341,7 @@ var App = {
                 Amount: ${web3.utils.fromWei(amount, 'ether')} ETH
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden failure');
             $("#alertModal").addClass('success');
             $("#alertMsg").text(output);
 
@@ -351,7 +356,7 @@ var App = {
                 2. You dont have enough ETH to fulfil the transaction 
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden success');
             $("#alertModal").addClass('failure');
             $("#alertMsg").text(output);
             console.log(`Error @ fundAirline: ${error.message}`);
@@ -371,7 +376,7 @@ var App = {
                 Amount: ${web3.utils.fromWei(amount, 'ether')} ETH
             `
 
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden failure');
             $("#alertModal").addClass('success');
             $("#alertMsg").text(output);
 
@@ -388,7 +393,7 @@ var App = {
 
                 2. You may not have enough ETH to initiate your removal.
             `
-            $("#alertModal").removeClass('hidden');
+            $("#alertModal").removeClass('hidden success');
             $("#alertModal").addClass('failure');
             $("#alertMsg").text(output);
 
@@ -440,27 +445,13 @@ var App = {
                     Timestamp: ${timestamp}
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden failure');
                 $("#alertModal").addClass('success');
                 $("#alertMsg").text(output);
 
                 console.log('flight successfully added');
-            }else{
-                let output = `
-                    FLIGHT REGISTRATION UNSUCCESSFULL:
-
-                    You cannot register a flight in the past.
-                `
-
-                $("#alertModal").removeClass('hidden');
-                $("#alertModal").addClass('failure');
-                $("#alertMsg").text(output);
-                alert("You cannot register a flight in the past!")
             }
             
-
-            
-
         }catch(error){
 
             let output = `
@@ -472,7 +463,7 @@ var App = {
                     2. The date of the flight is in the past
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden success');
                 $("#alertModal").addClass('failure');
                 $("#alertMsg").text(output);
                 alert("You cannot register a flight in the past!");
@@ -513,7 +504,7 @@ var App = {
                     Timestamp: ${timestamp}
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden failure');
                 $("#alertModal").addClass('success');
                 $("#alertMsg").text(output);
             }
@@ -529,7 +520,7 @@ var App = {
                     2. You must specifify an amount less than 1 ETH.
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden success');
                 $("#alertModal").addClass('failure');
                 $("#alertMsg").text(output);
 
@@ -629,7 +620,7 @@ var App = {
                     Your Address: ${App.metamaskAccountId}
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden failure');
                 $("#alertModal").addClass('success');
                 $("#alertMsg").text(output);
             }
@@ -644,7 +635,7 @@ var App = {
                        the it wasn't the airlines fault.
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden success');
                 $("#alertModal").addClass('failure ');
                 $("#alertMsg").text(output);
 
@@ -694,12 +685,12 @@ var App = {
             const newStatus = $("input[name='appContractStatus']:checked").val();
             if(newStatus === "paused"){
                 await instance.setOperatingStatus(true, {from: App.metamaskAccountId});
-                alert_msg("The App Contract Has Now Been Paused", 'success');
+            
             }
             
             if (newStatus === "notPaused"){
                 await instance.setOperatingStatus(false, {from: App.metamaskAccountId});
-                alert_msg("The App Contract Has Now Been Un-Paused", 'success');
+           
             }
 
         }catch(error){
@@ -764,7 +755,7 @@ var App = {
                     Authorised By: ${App.metamaskAccountId}
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden failure');
                 $("#alertModal").addClass('success');
                 $("#alertMsg").text(output);
      
@@ -778,7 +769,7 @@ var App = {
                     Possible Reason: You did not input a valid ethereum address.
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden success');
                 $("#alertModal").addClass('failure');
                 $("#alertMsg").text(output);
 
@@ -804,7 +795,7 @@ var App = {
                     Authorised By: ${App.metamaskAccountId}
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden failure');
                 $("#alertModal").addClass('success');
                 $("#alertMsg").text(output);
      
@@ -818,7 +809,7 @@ var App = {
                     Possible Reason: You did not input a valid ethereum address.
                 `
 
-                $("#alertModal").removeClass('hidden');
+                $("#alertModal").removeClass('hidden success');
                 $("#alertModal").addClass('failure');
                 $("#alertMsg").text(output);
 

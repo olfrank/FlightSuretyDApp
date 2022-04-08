@@ -125,7 +125,7 @@ contract FlightSuretyApp {
         
         uint256 numOfAirlines = flightSuretyData.getNumberOfRegAirlines();
 
-        if(numOfAirlines >= 4){
+        if(numOfAirlines > 4){
             uint256 _approvals = flightSuretyData.getApprovals(airlineAdd);
             uint256 _limit = calculateLimit(numOfAirlines);
             if(_approvals > _limit){
